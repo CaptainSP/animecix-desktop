@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta charset="utf-8">
+  <title>MTDB</title>
+  <base href="./">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1976d2">
+  <script src="https://github.com/videojs/mux.js/releases/latest/download/mux.js"></script>
+  <script src="https://code.responsivevoice.org/responsivevoice.js?key=sibeFjzA"></script>
+  <script type="text/javascript" src="//cdn.o333o.com/vast-im.js"></script>
+  <script id="dsq-count-scr" src="//animecix.disqus.com/count.js" async></script>
+  <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/8156393.js"></script>
+  <link rel="stylesheet" href="client/styles.e88fe8aaf36f1a54533c.css">
+</head>
+
+<body id="theme">
+  <app-root>
+
+  </app-root>
+
+  <script src="client/runtime-es2015.7b9993bf2f2094b3642b.js" type="module"></script>
+  <script src="client/runtime-es5.7b9993bf2f2094b3642b.js" nomodule defer></script>
+  <script src="client/polyfills-es5.eb74899211b6d6941067.js" nomodule defer></script>
+  <script src="client/polyfills-es2015.c53c741251122c903b4d.js" type="module"></script>
+  <script src="client/main-es2015.b1f380cf8097a34cd5b3.js" type="module"></script>
+  <script src="client/main-es5.b1f380cf8097a34cd5b3.js" nomodule defer></script>
+</body>
+
+<script>
+  var electron;
+  var fromApp = false;
+  try {
+    electron = nodeRequire('electron');
+    fromApp = true;
+  } catch (e) {
+
+  }
+  setTimeout(() => {
+    const customTitlebar = nodeRequire('custom-electron-titlebar');
+
+    new customTitlebar.Titlebar({
+      backgroundColor: customTitlebar.Color.fromHex('#444')
+    });
+  }, 20000)
+</script>
+
+</html>
