@@ -187,7 +187,7 @@ var Main = /** @class */ (function () {
             });
             //this.win.webContents.session.clearCache()
             _this.win.loadURL("https://animecix.com");
-            _this.win.webContents.openDevTools();
+            //this.win.webContents.openDevTools()
             electron_1.ipcMain.on("getDetails", function (event, ok) {
                 event.sender.send("details", _this.currentFrameUrl, _this.identifier);
                 _this.win.webContents.mainFrame.frames.forEach(function (frame) {
