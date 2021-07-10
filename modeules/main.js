@@ -187,9 +187,12 @@ var Main = /** @class */ (function () {
             });
             //this.win.webContents.session.clearCache()
             _this.win.loadURL("https://animecix.com");
-            //this.win.webContents.openDevTools()
+            _this.win.webContents.openDevTools();
             electron_1.ipcMain.on("getDetails", function (event, ok) {
                 event.sender.send("details", _this.currentFrameUrl, _this.identifier);
+                _this.win.webContents.mainFrame.frames.forEach(function (frame) {
+                    frame.send("details", _this.currentFrameUrl, _this.identifier);
+                });
             });
             electron_1.ipcMain.on("Odnok", function (event, ok) {
                 axios_1.default.get(_this.currentFrameUrl).then(function (response) {
