@@ -13,9 +13,10 @@ var Main = /** @class */ (function () {
         this.dir = dir;
         this.cancels = [];
         this.downloads = [];
-        setInterval(function () {
+        this.intervals = [];
+        this.intervals.push(setInterval(function () {
             _this.sendDownloads();
-        }, 500);
+        }, 500));
     }
     Main.prototype.sendToWindow = function (key, val) {
         if (val === void 0) { val = null; }
@@ -37,7 +38,7 @@ var Main = /** @class */ (function () {
                 downloadObj.downloader.start();
                 var notification = new electron_1.Notification({ icon: path.join(_this.dir, "files", "icon.png"), title: "İndiriliyor", body: downloadObj.name });
                 notification.on('click', function () {
-                    if (!_this.win.isDestroyed()) {
+                    if (_this.win != null && !_this.win.isDestroyed()) {
                         _this.sendToWindow("showDownloads");
                     }
                 });
@@ -117,14 +118,21 @@ var Main = /** @class */ (function () {
             _this.win.maximize();
             electron_updater_1.autoUpdater.checkForUpdatesAndNotify();
             electron_updater_1.autoUpdater.on('update-available', function () {
-                var notification = new electron_1.Notification({ icon: path.join(_this.dir, "files", "icon.png"), title: "AnimeciX Güncelleniyor...", body: "Güncelleme indiriliyor" });
-                notification.show();
-                _this.win.webContents.loadURL("https://animecix.com/windows/update.html");
+                if (_this.win != null && !_this.win.isDestroyed()) {
+                    var notification = new electron_1.Notification({ icon: path.join(_this.dir, "files", "icon.png"), title: "AnimeciX Güncelleniyor...", body: "Güncelleme indiriliyor" });
+                    notification.show();
+                    _this.win.webContents.loadURL("https://animecix.com/windows/update.html");
+                }
             });
             electron_updater_1.autoUpdater.on('update-downloaded', function () {
                 var notification = new electron_1.Notification({ icon: path.join(_this.dir, "files", "icon.png"), title: "AnimeciX Güncelleniyor...", body: "Güncelleme Kuruluyor" });
                 notification.show();
                 electron_updater_1.autoUpdater.quitAndInstall();
+            });
+            electron_updater_1.autoUpdater.on('download-progress', function (data) {
+                if (_this.win != null && !_this.win.isDestroyed()) {
+                    _this.win.webContents.send("update-download-progress", data);
+                }
             });
             var filter = {
                 urls: ['*://*/*']
@@ -184,6 +192,10 @@ var Main = /** @class */ (function () {
             });
             _this.win.on("close", function () {
                 electron_1.app.exit();
+                _this.intervals.forEach(function (element) {
+                    clearInterval(element);
+                });
+                _this.win = null;
             });
             //this.win.webContents.session.clearCache()
             _this.win.loadURL("https://animecix.com");
@@ -218,10 +230,12 @@ var Main = /** @class */ (function () {
                             });
                         });
                         _this.isOdnok = true;
-                        _this.win.webContents.mainFrame.frames.forEach(function (frame) {
-                            console.log(_this.sources);
-                            frame.send("Sources", _this.sources);
-                        });
+                        if (_this.win != null && !_this.win.isDestroyed()) {
+                            _this.win.webContents.mainFrame.frames.forEach(function (frame) {
+                                console.log(_this.sources);
+                                frame.send("Sources", _this.sources);
+                            });
+                        }
                     }
                     catch (e) {
                         console.log(e);
@@ -232,9 +246,11 @@ var Main = /** @class */ (function () {
             });
             electron_1.ipcMain.on("Setup", function (event, ok) {
                 sibnet_1.Sibnet.found(_this.currentFrameUrl, function (video) {
-                    _this.win.webContents.mainFrame.frames.forEach(function (frame) {
-                        frame.send("Standart", video);
-                    });
+                    if (_this.win != null && !_this.win.isDestroyed()) {
+                        _this.win.webContents.mainFrame.frames.forEach(function (frame) {
+                            frame.send("Standart", video);
+                        });
+                    }
                 });
             });
             electron_1.ipcMain.on("Standart", function (event, file) {
@@ -261,14 +277,18 @@ var Main = /** @class */ (function () {
                 _this.win.close();
             });
             electron_1.ipcMain.on("StandartSetup", function (event, file) {
-                _this.win.webContents.mainFrame.frames.forEach(function (frame) {
-                    frame.send("Standart", _this.standart);
-                });
+                if (_this.win != null && !_this.win.isDestroyed()) {
+                    _this.win.webContents.mainFrame.frames.forEach(function (frame) {
+                        frame.send("Standart", _this.standart);
+                    });
+                }
             });
             electron_1.ipcMain.on("Sources", function (event, ok) {
-                _this.win.webContents.mainFrame.frames.forEach(function (frame) {
-                    frame.send("Sources", _this.sources);
-                });
+                if (_this.win != null && !_this.win.isDestroyed()) {
+                    _this.win.webContents.mainFrame.frames.forEach(function (frame) {
+                        frame.send("Sources", _this.sources);
+                    });
+                }
             });
             electron_1.ipcMain.on("canDownload", function (event, file) {
                 _this.fileForDownload = file;
