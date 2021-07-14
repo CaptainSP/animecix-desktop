@@ -1,9 +1,10 @@
 window.nodeRequire = require;
 delete window.require;
-delete window.exports; delete window.module;
+delete window.exports;
+delete window.module;
 
 
-var i_n_t_erval = setInterval(function () {
+var i_n_t_erval = setInterval(function() {
 
     if (!require("electron").ipcRenderer) {
         return;
@@ -26,7 +27,7 @@ var i_n_t_erval = setInterval(function () {
     var interval;
 
     if (url.indexOf("fembed") >= 0 || url.indexOf("femax20") >= 0 || url.indexOf("feurl") >= 0) {
-        interval = setInterval(function () {
+        interval = setInterval(function() {
 
             if (jwplayer("vstr").getConfig().sources) {
                 const { ipcRenderer } = nodeRequire("electron");
@@ -37,7 +38,7 @@ var i_n_t_erval = setInterval(function () {
             } else {
                 var bound = document.querySelector(".loading-container > svg").getBoundingClientRect();
                 click(bound.x, bound.y);
-                document.querySelector(".loading-container > svg").click();
+                //document.querySelector(".loading-container > svg").click();
             }
 
         }, 1000);
@@ -100,7 +101,7 @@ var i_n_t_erval = setInterval(function () {
     }
 
     if (url.indexOf("streamtape") >= 0) {
-        var interval = setInterval(function () {
+        var interval = setInterval(function() {
             if (document.querySelector('video') && document.querySelector('video').src) {
                 const { ipcRenderer } = nodeRequire("electron");
                 ipcRenderer.send("Standart", document.querySelector('video').src);
@@ -136,14 +137,14 @@ var i_n_t_erval = setInterval(function () {
     if (url.indexOf("mail.ru") >= 0 && !url.indexOf("/hv/") >= 0) {
 
 
-        var interval = setInterval(function () {
+        var interval = setInterval(function() {
             if (jQuery) {
                 var url = JSON.parse(document.querySelector("div[data-mru-fragment='video/embed/main']").querySelector("script").textContent)['flashVars']['metadataUrl'];
-                jQuery.get("https:" + url, function (data) {
+                jQuery.get("https:" + url, function(data) {
 
                     var sources = [];
 
-                    data['videos'].reverse().forEach(function (item) {
+                    data['videos'].reverse().forEach(function(item) {
                         var source = {
                             label: item.key,
                             file: "https:" + item.url

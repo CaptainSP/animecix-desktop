@@ -1,31 +1,33 @@
 {
-  "name": "animecix",
-  "version": "1.0.7",
-  "description": "AnimeciX Desktop App",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "buildTypes": "./node_modules/.bin/tsc",
-    "build": "electron-builder build --win --publish never",
-    "deploy": "electron-builder build --win --publish always"
-  },
-  "author": "CaptainSP",
-  "license": "GPL",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/CaptainSP/animecix-desktop.git"
-  },
-  "dependencies": {
-    "axios": "^0.21.1",
-    "electron-updater": "^4.3.9",
-    "node-html-parser": "^4.0.0",
-    "nodejs-file-downloader": "^4.7.1",
-    "streamsaver": "^2.0.5"
-  },
-  "devDependencies": {
-    "@types/electron": "^1.6.10",
-    "electron": "^13.1.6",
-    "electron-builder": "^22.11.7",
-    "typescript": "^4.3.5"
-  }
+    "name": "animecix",
+    "version": "1.0.8",
+    "description": "AnimeciX Desktop App",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "buildTypes": "./node_modules/.bin/tsc",
+        "build": "electron-builder build --win --publish never",
+        "deploy": "electron-builder build --win --publish always"
+    },
+    "author": "CaptainSP",
+    "license": "GPL",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/CaptainSP/animecix-desktop.git"
+    },
+    "dependencies": {
+        "@cliqz/adblocker-electron": "^1.22.2",
+        "axios": "^0.21.1",
+        "electron-updater": "^4.3.9",
+        "node-fetch": "^2.6.1",
+        "node-html-parser": "^4.0.0",
+        "nodejs-file-downloader": "^4.7.1",
+        "streamsaver": "^2.0.5"
+    },
+    "devDependencies": {
+        "@types/electron": "^1.6.10",
+        "electron": "^13.1.6",
+        "electron-builder": "^22.11.7",
+        "typescript": "^4.3.5"
+    }
 }

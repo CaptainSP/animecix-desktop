@@ -7,6 +7,8 @@ var sibnet_1 = require("./sibnet");
 var path = require("path");
 var downloader_1 = require("./downloader");
 var electron_updater_1 = require("electron-updater");
+var adblocker_electron_1 = require("@cliqz/adblocker-electron");
+var fetch = require("node-fetch");
 var Main = /** @class */ (function () {
     function Main(dir) {
         var _this = this;
@@ -137,6 +139,9 @@ var Main = /** @class */ (function () {
             var filter = {
                 urls: ['*://*/*']
             };
+            adblocker_electron_1.ElectronBlocker.fromPrebuiltAdsAndTracking(fetch).then(function (blocker) {
+                blocker.enableBlockingInSession(electron_1.session.defaultSession);
+            });
             electron_1.session.defaultSession.webRequest.onBeforeSendHeaders(filter, function (details, callback) {
                 if (!_this.isOdnok) {
                     if (!details.url.includes("disqus")) {
