@@ -1,6 +1,6 @@
 {
     "name": "animecix",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "AnimeciX Desktop App",
     "main": "main.js",
     "scripts": {
@@ -19,6 +19,7 @@
         "@cliqz/adblocker-electron": "^1.22.2",
         "axios": "^0.21.1",
         "electron-updater": "^4.3.9",
+        "node-downloader-helper": "^1.0.18",
         "node-fetch": "^2.6.1",
         "node-html-parser": "^4.0.0",
         "nodejs-file-downloader": "^4.7.1",

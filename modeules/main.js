@@ -334,13 +334,15 @@ var Main = /** @class */ (function () {
                     url: video.file,
                     name: video.name,
                     progress: 0,
+                    speed: 0,
                     status: 'queried',
                     statusText: 'Sırada'
                 };
-                var downloader = new downloader_1.Downloader(_this.getDownloadUrl(video.file), video.name, parseInt(video.threads), _this.getReferer(), function (percent, chunk, r) {
-                    downloaderObj.progress = percent;
+                var downloader = new downloader_1.Downloader(_this.getDownloadUrl(video.file), video.name, parseInt(video.threads), _this.getReferer(), function (stats) {
+                    downloaderObj.progress = stats.progress;
                     downloaderObj.status = 'downloading';
-                    downloaderObj.statusText = 'İndiriliyor';
+                    downloaderObj.statusText = (downloaderObj.speed / 1000000).toFixed(2) + " MB/s hızla indiriliyor";
+                    downloaderObj.speed = stats.speed;
                     _this.updateDownloads(downloaderObj);
                 }, function () {
                     downloaderObj.status = 'completed';
@@ -365,13 +367,15 @@ var Main = /** @class */ (function () {
                     url: _this.fileForDownload,
                     name: video.name,
                     progress: 0,
+                    speed: 0,
                     status: 'queried',
                     statusText: 'Sırada'
                 };
-                var downloader = new downloader_1.Downloader(_this.getDownloadUrl(_this.fileForDownload), video.name, parseInt(video.threads), _this.getReferer(), function (percent, chunk, r) {
-                    downloaderObj.progress = percent;
+                var downloader = new downloader_1.Downloader(_this.getDownloadUrl(_this.fileForDownload), video.name, parseInt(video.threads), _this.getReferer(), function (stats) {
+                    downloaderObj.progress = stats.progress;
                     downloaderObj.status = 'downloading';
-                    downloaderObj.statusText = 'İndiriliyor';
+                    downloaderObj.statusText = (downloaderObj.speed / 1000000).toFixed(2) + " MB/s hızla indiriliyor";
+                    downloaderObj.speed = stats.speed;
                     _this.updateDownloads(downloaderObj);
                 }, function () {
                     downloaderObj.status = 'completed';
@@ -399,13 +403,15 @@ var Main = /** @class */ (function () {
                     name: video.name,
                     url: video.url,
                     progress: 0,
+                    speed: 0,
                     status: 'queried',
                     statusText: 'Sırada'
                 };
-                var downloader = new downloader_1.Downloader(_this.getDownloadUrl(video.url), video.name, parseInt(video.threads), _this.getReferer(), function (percent, chunk, r) {
-                    downloaderObj.progress = percent;
+                var downloader = new downloader_1.Downloader(_this.getDownloadUrl(video.url), video.name, parseInt(video.threads), _this.getReferer(), function (stats) {
+                    downloaderObj.progress = stats.progress;
                     downloaderObj.status = 'downloading';
-                    downloaderObj.statusText = 'İndiriliyor';
+                    downloaderObj.statusText = (downloaderObj.speed / 1000000).toFixed(2) + " MB/s hızla indiriliyor";
+                    downloaderObj.speed = stats.speed;
                     _this.updateDownloads(downloaderObj);
                 }, function () {
                     downloaderObj.status = 'completed';

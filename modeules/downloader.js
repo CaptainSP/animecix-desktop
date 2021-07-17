@@ -5,10 +5,15 @@ var axios_1 = require("axios");
 var path = require("path");
 var fs = require("fs");
 var electron_1 = require("electron");
+var node_downloader_helper_1 = require("node-downloader-helper");
 var Downloader = /** @class */ (function () {
     function Downloader(url, name, threadCount, referer, onProgress, onCompleted, onError) {
+        var _this = this;
         this.cancels = [];
         this.downloaded = 0;
+        this.bytespers = 0;
+        this.progressCount = 0;
+        this.progress = 0;
         this.threads = [];
         this.lastWrited = -1;
         this.canceled = false;
@@ -22,6 +27,20 @@ var Downloader = /** @class */ (function () {
         this.onProgress = onProgress;
         this.onCompleted = onCompleted;
         this.onError = onError;
+        this.progressInterval = setInterval(function () {
+            if (_this.downloading) {
+                var speed = 0;
+                var progress = 0;
+                for (var i = 0; i < _this.threads.length; i++) {
+                    speed += _this.threads[i].speed;
+                    progress += _this.threads[i].progress;
+                }
+                _this.onProgress({
+                    speed: speed,
+                    progress: (progress / _this.threads.length)
+                });
+            }
+        }, 1000);
     }
     Downloader.prototype.isDownloading = function () {
         return this.downloading;
@@ -69,7 +88,9 @@ var Downloader = /** @class */ (function () {
                 finished: false,
                 writed: false,
                 writeFinished: false,
-                path: ""
+                path: "",
+                speed: 0,
+                progress: 0
             };
             this.threads.push(thread);
             first = end;
@@ -92,28 +113,58 @@ var Downloader = /** @class */ (function () {
                 headers["Referer"] = _this.referer;
                 headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0";
             }
-            var Downloader = require('nodejs-file-downloader');
-            var downloader = new Downloader({
-                url: _this.url,
-                directory: _this.directory,
+            /*const Downloader = require('nodejs-file-downloader')
+            const downloader = new Downloader({
+                url: this.url,
+                directory: this.directory,
                 fileName: fileName,
                 headers: headers,
-                onProgress: function (percentage, chunk, remainingSize) {
-                    _this.onProgress(percentage, chunk, remainingSize);
+                onProgress: (percentage, chunk, remainingSize) => {
+
+                    this.onProgress(percentage, chunk, remainingSize)
+
                 }
+            })*/
+            var dl = new node_downloader_helper_1.DownloaderHelper(_this.url, _this.directory, {
+                fileName: fileName,
+                headers: headers,
+                retry: true,
+                override: true,
             });
-            downloader.download().then(function () {
+            dl.start();
+            dl.on('progress', function (stats) {
+                thread.speed = stats.speed;
+                thread.progress = stats.progress;
+            });
+            dl.on('end', function (stats) {
                 thread.finished = true;
                 _this.checkWrite();
-            }).catch(function (error) {
-                console.log(error);
-                _this.onError(error);
+            });
+            dl.on('error', function (stats) {
+                if (_this.downloading) {
+                    _this.onError(stats);
+                    _this.cancel();
+                }
                 _this.downloading = false;
             });
+            /*downloader.download().then(() => {
+                thread.finished = true
+                this.checkWrite()
+            }).catch(error => {
+                console.log(error)
+                this.onError(error)
+                this.downloading = false
+            })*/
             var interval = setInterval(function () {
                 if (_this.canceled) {
-                    downloader.cancel();
+                    //downloader.cancel()
+                    try {
+                        dl.stop();
+                    }
+                    catch (e) {
+                    }
                     clearInterval(interval);
+                    _this.onError("Canceled");
                 }
             }, 1);
         });
@@ -121,6 +172,9 @@ var Downloader = /** @class */ (function () {
     Downloader.prototype.checkWrite = function () {
         var _this = this;
         this.threads.forEach(function (thread) {
+            if (_this.canceled) {
+                return;
+            }
             try {
                 if (thread.finished && !thread.writed && _this.lastWrited + 1 == thread.id) {
                     var w = fs.createWriteStream(_this.path, { flags: 'a' });
