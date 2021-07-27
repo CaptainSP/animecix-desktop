@@ -9,7 +9,7 @@ var downloader_1 = require("./downloader");
 var electron_updater_1 = require("electron-updater");
 var adblocker_electron_1 = require("@cliqz/adblocker-electron");
 var fetch = require("node-fetch");
-var Main = /** @class */ (function () {
+var Main = (function () {
     function Main(dir) {
         var _this = this;
         this.dir = dir;
@@ -108,18 +108,6 @@ var Main = /** @class */ (function () {
                 icon: path.join(_this.dir, "files", "icon.png"),
                 frame: false
             });
-            /* this.win.webContents.on('did-fail-load', () => {
-                 setTimeout(this.win.reload, 2000)
-             })*/
-            /* axios.get('https://animecix.com/windows/loader.js').then(response => {
-                 this.loaderScript = response.data
-              
-                 
-             }).catch(e => {
-                 console.log(e)
-                 
-             })
- */
             _this.win.maximize();
             electron_updater_1.autoUpdater.checkForUpdatesAndNotify();
             electron_updater_1.autoUpdater.on('update-available', function () {
@@ -205,9 +193,7 @@ var Main = /** @class */ (function () {
                 });
                 _this.win = null;
             });
-            //this.win.webContents.session.clearCache()
             _this.win.loadURL("https://animecix.com");
-            _this.win.webContents.openDevTools();
             electron_1.ipcMain.on("getDetails", function (event, ok) {
                 event.sender.send("details", _this.currentFrameUrl, _this.identifier);
                 _this.win.webContents.mainFrame.frames.forEach(function (frame) {
@@ -224,7 +210,6 @@ var Main = /** @class */ (function () {
                         var opt = parsed.querySelector('[data-module="OKVideo"]').getAttribute("data-options");
                         var data = JSON.parse(opt);
                         var metadata = JSON.parse(data.flashvars.metadata);
-                        // console.log(metadata.videos)
                         _this.sources = [];
                         metadata.videos.forEach(function (element) {
                             _this.sources.push({
@@ -442,30 +427,6 @@ var Main = /** @class */ (function () {
                 _this.identifier = identifier;
                 _this.isOdnok = false;
                 console.log("UPDATE!");
-                /*this.win.webContents.mainFrame.frames.forEach(frame => {
-                    
-                    let loaderResponse = "if(!frameUrl) {\n\nvar identifier = `" + this.identifier + "`;  \n\n var frameUrl = `" + this.currentFrameUrl + "`;\n\n var dirname = `" + this.dir + "`;\n\n" + this.loaderScript + "\n\n}"
-                    frame.executeJavaScript(loaderResponse)
-                    
-                });
-
-
-                setInterval(() => {
-                    if (this.win.isDestroyed()) {
-                        return;
-                    }
-                    this.win.webContents.mainFrame.frames.forEach(frame => {
-
-                      
-                        let loaderResponse = "if(!frameUrl) {\n\nvar identifier = `" + this.identifier + "`;  \n\n var frameUrl = `" + this.currentFrameUrl + "`;\n\n var dirname = `" + this.dir + "`;\n\n" + this.loaderScript + "\n\n}"
-                        frame.executeJavaScript(loaderResponse)
-                      
-
-                    })
-
-
-
-                }, 1000)*/
             });
         });
     };

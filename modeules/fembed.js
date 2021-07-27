@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Fembed = void 0;
 var axios_1 = require("axios");
-var Fembed = /** @class */ (function () {
+var Fembed = (function () {
     function Fembed(url, onFinish, onError) {
         this.url = url;
         this.onFinish = onFinish;
@@ -58,15 +58,15 @@ var Fembed = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, axios_1.default.get(this.url)];
+                    case 0: return [4, axios_1.default.get(this.url)];
                     case 1:
                         data = (_a.sent()).data;
                         userId = parseInt(data.split("var USER_ID = '")[1].split("'")[0]);
-                        return [4 /*yield*/, this.second()];
+                        return [4, this.second()];
                     case 2:
                         sourceData = _a.sent();
                         this.sources = sourceData.data;
-                        return [4 /*yield*/, new Promise(function (resolve, reject) {
+                        return [4, new Promise(function (resolve, reject) {
                                 setTimeout(function () {
                                     console.log(userId);
                                     axios_1.default.post("https://v3.fstats.xyz/watch", {
@@ -83,7 +83,7 @@ var Fembed = /** @class */ (function () {
                                     });
                                 }, 2000);
                             })];
-                    case 3: return [2 /*return*/, _a.sent()];
+                    case 3: return [2, _a.sent()];
                 }
             });
         });
@@ -92,11 +92,11 @@ var Fembed = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, axios_1.default.post("https://femax20.com/api/source/" + this.getVideoId(), {
+                    case 0: return [4, axios_1.default.post("https://femax20.com/api/source/" + this.getVideoId(), {
                             r: "",
                             d: "femax20.com"
                         })];
-                    case 1: return [2 /*return*/, (_a.sent()).data];
+                    case 1: return [2, (_a.sent()).data];
                 }
             });
         });

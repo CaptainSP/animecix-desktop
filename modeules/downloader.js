@@ -6,7 +6,7 @@ var path = require("path");
 var fs = require("fs");
 var electron_1 = require("electron");
 var node_downloader_helper_1 = require("node-downloader-helper");
-var Downloader = /** @class */ (function () {
+var Downloader = (function () {
     function Downloader(url, name, threadCount, referer, onProgress, onCompleted, onError) {
         var _this = this;
         this.cancels = [];
@@ -113,18 +113,6 @@ var Downloader = /** @class */ (function () {
                 headers["Referer"] = _this.referer;
                 headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0";
             }
-            /*const Downloader = require('nodejs-file-downloader')
-            const downloader = new Downloader({
-                url: this.url,
-                directory: this.directory,
-                fileName: fileName,
-                headers: headers,
-                onProgress: (percentage, chunk, remainingSize) => {
-
-                    this.onProgress(percentage, chunk, remainingSize)
-
-                }
-            })*/
             var dl = new node_downloader_helper_1.DownloaderHelper(_this.url, _this.directory, {
                 fileName: fileName,
                 headers: headers,
@@ -147,17 +135,8 @@ var Downloader = /** @class */ (function () {
                 }
                 _this.downloading = false;
             });
-            /*downloader.download().then(() => {
-                thread.finished = true
-                this.checkWrite()
-            }).catch(error => {
-                console.log(error)
-                this.onError(error)
-                this.downloading = false
-            })*/
             var interval = setInterval(function () {
                 if (_this.canceled) {
-                    //downloader.cancel()
                     try {
                         dl.stop();
                     }

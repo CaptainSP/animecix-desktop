@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Sibnet = void 0;
 var axios_1 = require("axios");
-var Sibnet = /** @class */ (function () {
+var Sibnet = (function () {
     function Sibnet() {
     }
     Sibnet.found = function (url, after) {
