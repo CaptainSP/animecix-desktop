@@ -19,6 +19,9 @@ var Main = /** @class */ (function () {
         this.intervals.push(setInterval(function () {
             _this.sendDownloads();
         }, 500));
+        this.intervals.push(setInterval(function () {
+            _this.checkStart();
+        }, 2000));
     }
     Main.prototype.sendToWindow = function (key, val) {
         if (val === void 0) { val = null; }
@@ -36,7 +39,7 @@ var Main = /** @class */ (function () {
         var _this = this;
         var started = false;
         this.downloads.forEach(function (downloadObj) {
-            if (!downloadObj.downloader.isDownloading() && !downloadObj.downloader.isCanceled() && !started) {
+            if (!downloadObj.downloader.isDownloading() && !downloadObj.downloader.isCanceled() && !started && downloadObj.status != 'completed') {
                 downloadObj.downloader.start();
                 var notification = new electron_1.Notification({ icon: path.join(_this.dir, "files", "icon.png"), title: "İndiriliyor", body: downloadObj.name });
                 notification.on('click', function () {
@@ -204,7 +207,7 @@ var Main = /** @class */ (function () {
             });
             //this.win.webContents.session.clearCache()
             _this.win.loadURL("https://animecix.com");
-            //this.win.webContents.openDevTools()
+            _this.win.webContents.openDevTools();
             electron_1.ipcMain.on("getDetails", function (event, ok) {
                 event.sender.send("details", _this.currentFrameUrl, _this.identifier);
                 _this.win.webContents.mainFrame.frames.forEach(function (frame) {

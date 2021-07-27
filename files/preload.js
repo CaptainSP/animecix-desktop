@@ -26,7 +26,7 @@ var i_n_t_erval = setInterval(function() {
     var url = window.location.href
     var interval;
 
-    if (url.indexOf("fembed") >= 0 || url.indexOf("femax20") >= 0 || url.indexOf("feurl") >= 0) {
+    if (url.indexOf("fembed") >= 0 || url.indexOf("femax20") >= 0 || url.indexOf("feurl") >= 0 || url.indexOf("mrdhan") >= 0 || url.indexOf("/v/") >= 0) {
         interval = setInterval(function() {
 
             if (jwplayer("vstr").getConfig().sources) {
@@ -42,6 +42,38 @@ var i_n_t_erval = setInterval(function() {
             }
 
         }, 1000);
+
+
+
+        var videoId = window.location.href.split("/v/")[1].split("?")[0].split("#")[0];
+
+
+        fetch("/api/source/" + videoId, {
+            method: "POST",
+            body: JSON.stringify({
+                r: "",
+                d: location.hostname
+            })
+        }).then(res => {
+            res.json().then(data => {
+
+                fetch("https://v3.fstats.xyz/watch", {
+                    method: "POST",
+                    body: JSON.stringify({ "id": videoId, "user": USER_ID, "ref": "", "vip": 0 })
+                }).then(res => {
+
+                })
+
+                const { ipcRenderer } = nodeRequire("electron");
+
+                //console.log("AAAA", data)
+                ipcRenderer.send("Fembed", JSON.stringify(data.data));
+                clearInterval(interval);
+                window.location.href = "https://animecix.com/windows/sources.html";
+
+            });
+        });
+
     }
 
     if (url.indexOf("vk.com") >= 0 && url.indexOf("href.li") < 0) {
