@@ -4,6 +4,7 @@ delete window.exports;
 delete window.module;
 
 
+
 var i_n_t_erval = setInterval(function() {
 
     if (!require("electron").ipcRenderer) {
@@ -15,6 +16,7 @@ var i_n_t_erval = setInterval(function() {
     }
 
     if (window.location.href.indexOf("sibnet.ru") >= 0) {
+        updateCurrent();
         window.location.href = "https://animecix.com/windows/player.html#sibnet"
     }
 
@@ -31,7 +33,7 @@ var i_n_t_erval = setInterval(function() {
 
             if (jwplayer("vstr").getConfig().sources) {
                 const { ipcRenderer } = nodeRequire("electron");
-
+                updateCurrent();
                 ipcRenderer.send("Fembed", JSON.stringify(jwplayer("vstr").getConfig().sources));
                 clearInterval(interval);
                 window.location.href = "https://animecix.com/windows/sources.html";
@@ -67,6 +69,7 @@ var i_n_t_erval = setInterval(function() {
                 const { ipcRenderer } = nodeRequire("electron");
 
                 //console.log("AAAA", data)
+                updateCurrent();
                 ipcRenderer.send("Fembed", JSON.stringify(data.data));
                 clearInterval(interval);
                 window.location.href = "https://animecix.com/windows/sources.html";
@@ -126,6 +129,7 @@ var i_n_t_erval = setInterval(function() {
         }
 
         const { ipcRenderer } = nodeRequire("electron");
+        updateCurrent();
         ipcRenderer.send("Fembed", JSON.stringify(sources));
         window.location.href = "https://animecix.com/windows/sources.html"
 
@@ -136,6 +140,7 @@ var i_n_t_erval = setInterval(function() {
         var interval = setInterval(function() {
             if (document.querySelector('video') && document.querySelector('video').src) {
                 const { ipcRenderer } = nodeRequire("electron");
+                updateCurrent();
                 ipcRenderer.send("Standart", document.querySelector('video').src);
                 window.location.href = "https://animecix.com/windows/player.html"
                 clearInterval(interval);
@@ -146,6 +151,7 @@ var i_n_t_erval = setInterval(function() {
     if (url.indexOf("uqload") >= 0 && document.querySelectorAll("video")[0].src) {
         const { ipcRenderer } = nodeRequire("electron");
         if (document.querySelectorAll("video")[0].src.length > 7) {
+            updateCurrent();
             ipcRenderer.send("Standart", document.querySelectorAll("video")[0].src);
             window.location.href = "https://animecix.com/windows/player.html"
         } else {
@@ -158,6 +164,7 @@ var i_n_t_erval = setInterval(function() {
 
         const { ipcRenderer } = nodeRequire("electron");
         if (document.querySelectorAll("video")[0].src.length > 7) {
+            updateCurrent();
             ipcRenderer.send("Standart", document.querySelectorAll("video")[0].src);
             window.location.href = "https://animecix.com/windows/player.html"
         } else {
@@ -184,6 +191,7 @@ var i_n_t_erval = setInterval(function() {
                         sources.push(source);
                     });
                     const { ipcRenderer } = nodeRequire("electron");
+                    updateCurrent();
                     ipcRenderer.send("Fembed", JSON.stringify(sources));
                     window.location.href = "https://animecix.com/windows/sources.html"
                 });
@@ -205,6 +213,10 @@ var i_n_t_erval = setInterval(function() {
             0, null
         );
         el.dispatchEvent(ev);
+    }
+
+    function updateCurrent() {
+        require("electron").ipcRenderer.send("updateCurrent", window.location.href);
     }
 
 }, 1000)

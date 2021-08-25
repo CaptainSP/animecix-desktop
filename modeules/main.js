@@ -424,9 +424,11 @@ var Main = (function () {
             });
             electron_1.ipcMain.on("updateCurrent", function (event, currentUrl, identifier) {
                 _this.currentFrameUrl = currentUrl;
-                _this.identifier = identifier;
+                if (identifier != null) {
+                    _this.identifier = identifier;
+                }
                 _this.isOdnok = false;
-                console.log("UPDATE!");
+                console.log("UPDATE!", currentUrl);
             });
         });
     };
