@@ -8,7 +8,6 @@ var electron_1 = require("electron");
 var node_downloader_helper_1 = require("node-downloader-helper");
 var Downloader = (function () {
     function Downloader(url, name, threadCount, referer, onProgress, onCompleted, onError) {
-        var _this = this;
         this.cancels = [];
         this.downloaded = 0;
         this.bytespers = 0;
@@ -18,6 +17,7 @@ var Downloader = (function () {
         this.lastWrited = -1;
         this.canceled = false;
         this.downloading = false;
+        this.pri = 0;
         this.url = url;
         this.threadCount = threadCount;
         this.referer = referer;
@@ -27,7 +27,23 @@ var Downloader = (function () {
         this.onProgress = onProgress;
         this.onCompleted = onCompleted;
         this.onError = onError;
+        var https = require('https');
+        this.instance = axios_1.default.create({
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            })
+        });
+        this.startInterval();
+    }
+    Downloader.prototype.startInterval = function () {
+        var _this = this;
+        if (this.progressInterval != null) {
+            clearInterval(this.progressInterval);
+            this.progressInterval = null;
+        }
         this.progressInterval = setInterval(function () {
+            console.log("YES " + _this.pri);
+            _this.pri++;
             if (_this.downloading) {
                 var speed = 0;
                 var progress = 0;
@@ -37,11 +53,12 @@ var Downloader = (function () {
                 }
                 _this.onProgress({
                     speed: speed,
-                    progress: (progress / _this.threads.length)
+                    progress: (progress / _this.threads.length),
+                    canceled: _this.canceled
                 });
             }
         }, 1000);
-    }
+    };
     Downloader.prototype.isDownloading = function () {
         return this.downloading;
     };
@@ -49,11 +66,17 @@ var Downloader = (function () {
         return this.canceled;
     };
     Downloader.prototype.start = function () {
+        this.canceled = false;
         this.checkSize();
         this.downloading = true;
+        if (this.progressInterval == null) {
+            this.startInterval();
+        }
+        console.log("START CALLED");
     };
     Downloader.prototype.cancel = function () {
         this.canceled = true;
+        this.destroy();
     };
     Downloader.prototype.checkSize = function () {
         var _this = this;
@@ -62,7 +85,7 @@ var Downloader = (function () {
             headers["Referer"] = this.referer;
             headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0";
         }
-        axios_1.default.get(this.url, {
+        this.instance.get(this.url, {
             headers: headers,
             responseType: 'stream'
         }).then(function (response) {
@@ -95,9 +118,6 @@ var Downloader = (function () {
             this.threads.push(thread);
             first = end;
         }
-        console.log("TOTAL", this.totalsize);
-        console.log("CHUNK", this.chunkSize);
-        console.log("PARTS", this.threads);
         this.downloadParts();
     };
     Downloader.prototype.downloadParts = function () {
@@ -117,6 +137,9 @@ var Downloader = (function () {
                 fileName: fileName,
                 headers: headers,
                 retry: true,
+                httpsRequestOptions: {
+                    rejectUnauthorized: false
+                },
                 override: true,
             });
             dl.start();
@@ -185,9 +208,16 @@ var Downloader = (function () {
             console.log("Completed!");
             this.onCompleted();
             this.downloading = false;
+            this.destroy();
         }
         else {
             this.checkWrite();
+        }
+    };
+    Downloader.prototype.destroy = function () {
+        if (this.progressInterval != null) {
+            clearInterval(this.progressInterval);
+            this.progressInterval = null;
         }
     };
     return Downloader;

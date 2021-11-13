@@ -1,10 +1,11 @@
 {
     "name": "animecix",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "AnimeciX Desktop App",
     "main": "main.js",
     "scripts": {
-        "start": "electron .",
+        "compile": "tsc",
+        "start": "npm run compile && electron .",
         "buildTypes": "./node_modules/.bin/tsc",
         "build": "electron-builder build --win --publish never",
         "deploy": "electron-builder build --win --publish always"

@@ -327,15 +327,27 @@ var Main = (function () {
                     statusText: 'Sırada'
                 };
                 var downloader = new downloader_1.Downloader(_this.getDownloadUrl(video.file), video.name, parseInt(video.threads), _this.getReferer(), function (stats) {
-                    downloaderObj.progress = stats.progress;
-                    downloaderObj.status = 'downloading';
-                    downloaderObj.statusText = (downloaderObj.speed / 1000000).toFixed(2) + " MB/s hızla indiriliyor";
-                    downloaderObj.speed = stats.speed;
+                    if (stats.canceled) {
+                        downloaderObj.status = 'failed';
+                        if (downloader.isCanceled()) {
+                            downloaderObj.statusText = 'İptal Edildi';
+                        }
+                        else {
+                            downloaderObj.statusText = 'İndirme Başarısız';
+                        }
+                    }
+                    else {
+                        downloaderObj.progress = stats.progress;
+                        downloaderObj.status = 'downloading';
+                        downloaderObj.statusText = (downloaderObj.speed / 1000000).toFixed(2) + " MB/s hızla indiriliyor";
+                        downloaderObj.speed = stats.speed;
+                    }
                     _this.updateDownloads(downloaderObj);
                 }, function () {
                     downloaderObj.status = 'completed';
                     downloaderObj.statusText = 'İndirme Tamamlandı';
                     _this.updateDownloads(downloaderObj);
+                    _this.sendNotificationIfAllDownloaded();
                 }, function (e) {
                     downloaderObj.status = 'failed';
                     if (downloader.isCanceled()) {
@@ -360,15 +372,27 @@ var Main = (function () {
                     statusText: 'Sırada'
                 };
                 var downloader = new downloader_1.Downloader(_this.getDownloadUrl(_this.fileForDownload), video.name, parseInt(video.threads), _this.getReferer(), function (stats) {
-                    downloaderObj.progress = stats.progress;
-                    downloaderObj.status = 'downloading';
-                    downloaderObj.statusText = (downloaderObj.speed / 1000000).toFixed(2) + " MB/s hızla indiriliyor";
-                    downloaderObj.speed = stats.speed;
+                    if (stats.canceled) {
+                        downloaderObj.status = 'failed';
+                        if (downloader.isCanceled()) {
+                            downloaderObj.statusText = 'İptal Edildi';
+                        }
+                        else {
+                            downloaderObj.statusText = 'İndirme Başarısız';
+                        }
+                    }
+                    else {
+                        downloaderObj.progress = stats.progress;
+                        downloaderObj.status = 'downloading';
+                        downloaderObj.statusText = (downloaderObj.speed / 1000000).toFixed(2) + " MB/s hızla indiriliyor";
+                        downloaderObj.speed = stats.speed;
+                    }
                     _this.updateDownloads(downloaderObj);
                 }, function () {
                     downloaderObj.status = 'completed';
                     downloaderObj.statusText = 'İndirme Tamamlandı';
                     _this.updateDownloads(downloaderObj);
+                    _this.sendNotificationIfAllDownloaded();
                 }, function (e) {
                     downloaderObj.status = 'failed';
                     if (downloader.isCanceled()) {
@@ -431,6 +455,19 @@ var Main = (function () {
                 console.log("UPDATE!", currentUrl);
             });
         });
+    };
+    Main.prototype.sendNotificationIfAllDownloaded = function () {
+        var _this = this;
+        if (this.downloads.filter(function (item) { return (item.status == 'downloading' || item.status == 'queried'); }).length == 0) {
+            var completed = this.downloads.filter(function (item) { return item.status == 'completed'; }).length;
+            var notification = new electron_1.Notification({ icon: path.join(this.dir, "files", "icon.png"), title: "Tüm indirmeler tamamlandı", body: completed + " dosya indirildi." });
+            notification.on('click', function () {
+                if (_this.win != null && !_this.win.isDestroyed()) {
+                    _this.sendToWindow("showDownloads");
+                }
+            });
+            notification.show();
+        }
     };
     return Main;
 }());
