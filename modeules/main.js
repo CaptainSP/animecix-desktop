@@ -409,6 +409,9 @@ var Main = (function () {
             electron_1.ipcMain.on("nextEpisode", function (event, ok) {
                 _this.sendToWindow("nextEpisode", true);
             });
+            electron_1.ipcMain.on("playerError", function (event, ok) {
+                _this.sendToWindow("playerError", true);
+            });
             electron_1.ipcMain.on("retryDownload", function (event, video) {
                 var downloaderObj = {
                     downloader: null,

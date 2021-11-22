@@ -17,11 +17,11 @@ var i_n_t_erval = setInterval(function() {
 
     if (window.location.href.indexOf("sibnet.ru") >= 0) {
         updateCurrent();
-        window.location.href = "https://animecix.com/windows/player.html#sibnet"
+        window.location.href = "https://m.animecix.com/windows/player.html#sibnet"
     }
 
     if ((window.location.href.indexOf("ok.ru") >= 0 || window.location.href.indexOf("odnoklassniki") >= 0) && window.location.href.includes("videoembed")) {
-        window.location.href = "https://animecix.com/windows/sources.html#odnok"
+        window.location.href = "https://m.animecix.com/windows/sources.html#odnok"
     }
 
 
@@ -36,7 +36,7 @@ var i_n_t_erval = setInterval(function() {
                 updateCurrent();
                 ipcRenderer.send("Fembed", JSON.stringify(jwplayer("vstr").getConfig().sources));
                 clearInterval(interval);
-                window.location.href = "https://animecix.com/windows/sources.html";
+                window.location.href = "https://m.animecix.com/windows/sources.html";
             } else {
                 var bound = document.querySelector(".loading-container > svg").getBoundingClientRect();
                 click(bound.x, bound.y);
@@ -72,7 +72,7 @@ var i_n_t_erval = setInterval(function() {
                 updateCurrent();
                 ipcRenderer.send("Fembed", JSON.stringify(data.data));
                 clearInterval(interval);
-                window.location.href = "https://animecix.com/windows/sources.html";
+                window.location.href = "https://m.animecix.com/windows/sources.html";
 
             });
         });
@@ -131,7 +131,7 @@ var i_n_t_erval = setInterval(function() {
         const { ipcRenderer } = nodeRequire("electron");
         updateCurrent();
         ipcRenderer.send("Fembed", JSON.stringify(sources));
-        window.location.href = "https://animecix.com/windows/sources.html"
+        window.location.href = "https://m.animecix.com/windows/sources.html"
 
 
     }
@@ -142,7 +142,7 @@ var i_n_t_erval = setInterval(function() {
                 const { ipcRenderer } = nodeRequire("electron");
                 updateCurrent();
                 ipcRenderer.send("Standart", document.querySelector('video').src);
-                window.location.href = "https://animecix.com/windows/player.html"
+                window.location.href = "https://m.animecix.com/windows/player.html"
                 clearInterval(interval);
             }
         }, 1000);
@@ -153,7 +153,7 @@ var i_n_t_erval = setInterval(function() {
         if (document.querySelectorAll("video")[0].src.length > 7) {
             updateCurrent();
             ipcRenderer.send("Standart", document.querySelectorAll("video")[0].src);
-            window.location.href = "https://animecix.com/windows/player.html"
+            window.location.href = "https://m.animecix.com/windows/player.html"
         } else {
             ipcRenderer.send("Next", true);
         }
@@ -166,7 +166,7 @@ var i_n_t_erval = setInterval(function() {
         if (document.querySelectorAll("video")[0].src.length > 7) {
             updateCurrent();
             ipcRenderer.send("Standart", document.querySelectorAll("video")[0].src);
-            window.location.href = "https://animecix.com/windows/player.html"
+            window.location.href = "https://m.animecix.com/windows/player.html"
         } else {
             ipcRenderer.send("Next", true);
         }
@@ -193,7 +193,7 @@ var i_n_t_erval = setInterval(function() {
                     const { ipcRenderer } = nodeRequire("electron");
                     updateCurrent();
                     ipcRenderer.send("Fembed", JSON.stringify(sources));
-                    window.location.href = "https://animecix.com/windows/sources.html"
+                    window.location.href = "https://m.animecix.com/windows/sources.html"
                 });
                 clearInterval(interval);
             }
