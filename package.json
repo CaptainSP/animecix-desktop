@@ -1,6 +1,6 @@
 {
     "name": "animecix",
-    "version": "1.1.3",
+    "version": "1.1.4",
     "description": "AnimeciX Desktop App",
     "main": "main.js",
     "scripts": {
@@ -8,7 +8,9 @@
         "start": "npm run compile && electron .",
         "buildTypes": "./node_modules/.bin/tsc",
         "build": "electron-builder build --win --publish never",
-        "deploy": "electron-builder build --win --publish always"
+        "build32": "electron-builder build --win --ia32 --publish never",
+        "deploy": "electron-builder build --win --publish always",
+        "deploy32": "electron-builder build --win --ia32 --publish always"
     },
     "author": "CaptainSP",
     "license": "GPL",
@@ -28,8 +30,9 @@
     },
     "devDependencies": {
         "@types/electron": "^1.6.10",
+        "@types/node-fetch": "^3.0.3",
         "electron": "^13.1.6",
         "electron-builder": "^22.11.7",
-        "typescript": "^4.3.5"
+        "typescript": "^4.5.4"
     }
 }

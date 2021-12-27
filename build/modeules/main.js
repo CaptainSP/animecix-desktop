@@ -21,8 +21,6 @@ var Main = /** @class */ (function () {
         this.cancels = [];
         this.downloads = [];
         this.intervals = [];
-        this.downloadsWindow = null;
-        this.paused = false;
         this.intervals.push(setInterval(function () {
             _this.sendDownloads();
         }, 500));
@@ -35,9 +33,6 @@ var Main = /** @class */ (function () {
         if (this.win != null && !this.win.isDestroyed()) {
             this.win.webContents.send(key, val);
         }
-        if (this.downloadsWindow != null && !this.downloadsWindow.isDestroyed()) {
-            this.downloadsWindow.webContents.send(key, val);
-        }
     };
     Main.prototype.getDownloadUrl = function (url) {
         if (url.includes("mycdn")) {
@@ -45,46 +40,24 @@ var Main = /** @class */ (function () {
         }
         return url;
     };
-    Main.prototype.array_move = function (arr, old_index, new_index) {
-        if (new_index >= arr.length) {
-            var k = new_index - arr.length + 1;
-            while (k--) {
-                arr.push(undefined);
-            }
-        }
-        arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
-        return arr;
-    };
-    ;
     Main.prototype.checkStart = function () {
         var _this = this;
-        if (this.paused) {
-            return;
-        }
         var started = false;
-        var i = 0;
         this.downloads.forEach(function (downloadObj) {
-            if (!downloadObj.downloader.isDownloading() && !downloadObj.downloader.isCanceled() && !downloadObj.downloader.error && !started && downloadObj.status != 'completed') {
-                if (i != 0) {
-                    _this.array_move(_this.downloads, i, 0);
-                    _this.checkStart();
-                }
-                else {
-                    downloadObj.downloader.start();
-                    var notification = new electron_1.Notification({ icon: path_1.default.join(_this.dir, "files", "icon.png"), title: "İndiriliyor", body: downloadObj.name });
-                    notification.on('click', function () {
-                        if (_this.win != null && !_this.win.isDestroyed()) {
-                            _this.sendToWindow("showDownloads");
-                        }
-                    });
-                    notification.show();
-                    started = true;
-                }
+            if (!downloadObj.downloader.isDownloading() && !downloadObj.downloader.isCanceled() && !started && downloadObj.status != 'completed') {
+                downloadObj.downloader.start();
+                var notification = new electron_1.Notification({ icon: path_1.default.join(_this.dir, "files", "icon.png"), title: "İndiriliyor", body: downloadObj.name });
+                notification.on('click', function () {
+                    if (_this.win != null && !_this.win.isDestroyed()) {
+                        _this.sendToWindow("showDownloads");
+                    }
+                });
+                notification.show();
+                started = true;
             }
             else if (downloadObj.downloader.isDownloading()) {
                 started = true;
             }
-            i++;
         });
     };
     Main.prototype.updateDownloads = function (obj) {
@@ -119,7 +92,6 @@ var Main = /** @class */ (function () {
                 };
                 return obj;
             }));
-            this.sendToWindow("paused", this.paused);
         }
     };
     Main.prototype.getReferer = function () {
@@ -245,9 +217,6 @@ var Main = /** @class */ (function () {
             //this.win.webContents.session.clearCache()
             _this.win.loadURL("https://animecix.com");
             //this.win.webContents.openDevTools()
-            electron_1.ipcMain.on("setPaused", function (event, paused) {
-                _this.paused = paused;
-            });
             electron_1.ipcMain.on("getDetails", function (event, ok) {
                 event.sender.send("details", _this.currentFrameUrl, _this.identifier);
                 if (_this.win != null) {
@@ -387,27 +356,6 @@ var Main = /** @class */ (function () {
             electron_1.ipcMain.on("seeAll", function (event, ok) {
                 electron_1.shell.openPath(electron_1.app.getPath("downloads") + "/AnimeciX/");
             });
-            electron_1.ipcMain.on("downloads", function (event, data) {
-                if (_this.downloadsWindow == null) {
-                    _this.downloadsWindow = new electron_1.BrowserWindow({
-                        webPreferences: {
-                            nodeIntegration: true,
-                            contextIsolation: false,
-                            nodeIntegrationInSubFrames: true,
-                            preload: _this.dir + "/files/preload.js",
-                        }
-                    });
-                    // this.downloadsWindow.webContents.openDevTools()
-                    _this.downloadsWindow.removeMenu();
-                    _this.downloadsWindow.loadURL("https://animecix.com/windows/downloads.html");
-                    _this.downloadsWindow.once('close', function () {
-                        _this.downloadsWindow = null;
-                    });
-                }
-                else if (!_this.downloadsWindow.isDestroyed()) {
-                    _this.downloadsWindow.focus();
-                }
-            });
             electron_1.ipcMain.on("downloadSource", function (event, video) {
                 var downloaderObj = {
                     downloader: null,
@@ -536,11 +484,6 @@ var Main = /** @class */ (function () {
                 });
                 downloaderObj.downloader = downloader;
                 _this.updateDownloads(downloaderObj);
-            });
-            electron_1.ipcMain.on('moveDownloads', function (evt, a, b) {
-                if (b != 1 && a != 1) {
-                    _this.array_move(_this.downloads, a, b);
-                }
             });
             electron_1.ipcMain.on("Fembed", function (event, sourceString) {
                 _this.sources = JSON.parse(sourceString);

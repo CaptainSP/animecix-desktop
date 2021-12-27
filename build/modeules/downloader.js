@@ -40,9 +40,7 @@ var Downloader = /** @class */ (function () {
         this.threads = [];
         this.lastWrited = -1;
         this.canceled = false;
-        this.error = false;
         this.downloading = false;
-        this.cancelerInterval = null;
         this.pri = 0;
         this.url = url;
         this.threadCount = threadCount;
@@ -93,7 +91,6 @@ var Downloader = /** @class */ (function () {
     };
     Downloader.prototype.start = function () {
         this.canceled = false;
-        this.error = false;
         this.checkSize();
         this.downloading = true;
         if (this.progressInterval == null) {
@@ -117,19 +114,8 @@ var Downloader = /** @class */ (function () {
             responseType: 'stream'
         }).then(function (response) {
             _this.totalsize = response.headers['content-length'];
-            console.log(_this.totalsize);
             _this.checkParts();
         }).catch(function (e) {
-            if (_this.downloading) {
-                _this.onError(e);
-                _this.downloading = false;
-                _this.error = true;
-                if (_this.cancelerInterval != null) {
-                    clearInterval(_this.cancelerInterval);
-                    _this.cancelerInterval = null;
-                }
-                _this.destroy();
-            }
             console.log(e);
         });
     };
@@ -163,12 +149,10 @@ var Downloader = /** @class */ (function () {
     };
     Downloader.prototype.downloadParts = function () {
         var _this = this;
-        console.log("download parts");
         if (!fs_1.default.existsSync(this.directory)) {
             fs_1.default.mkdirSync(this.directory);
         }
         this.threads.forEach(function (thread) {
-            console.log("thread start");
             var downloadPath = _this.path + "__" + thread.id + ".befw";
             var fileName = _this.name + "__" + thread.id + ".befw";
             thread.path = downloadPath;
@@ -212,14 +196,9 @@ var Downloader = /** @class */ (function () {
             dl.on('error', function (stats) {
                 if (_this.downloading) {
                     _this.onError(stats);
-                    _this.downloading = false;
-                    _this.error = true;
-                    if (_this.cancelerInterval != null) {
-                        clearInterval(_this.cancelerInterval);
-                        _this.cancelerInterval = null;
-                    }
-                    _this.destroy();
+                    _this.cancel();
                 }
+                _this.downloading = false;
             });
             /*downloader.download().then(() => {
                 thread.finished = true
@@ -229,25 +208,18 @@ var Downloader = /** @class */ (function () {
                 this.onError(error)
                 this.downloading = false
             })*/
-            if (_this.cancelerInterval == null) {
-                _this.cancelerInterval = setInterval(function () {
-                    if (_this.canceled) {
-                        //downloader.cancel()
-                        try {
-                            dl.stop();
-                        }
-                        catch (e) {
-                        }
-                        _this.downloading = false;
-                        if (_this.cancelerInterval != null) {
-                            clearInterval(_this.cancelerInterval);
-                            _this.cancelerInterval = null;
-                        }
-                        _this.onError("Canceled");
-                        console.log("canceled");
+            var interval = setInterval(function () {
+                if (_this.canceled) {
+                    //downloader.cancel()
+                    try {
+                        dl.stop();
                     }
-                }, 1);
-            }
+                    catch (e) {
+                    }
+                    clearInterval(interval);
+                    _this.onError("Canceled");
+                }
+            }, 1);
         });
     };
     Downloader.prototype.checkWrite = function () {
@@ -262,11 +234,7 @@ var Downloader = /** @class */ (function () {
                     var r = fs_1.default.createReadStream(thread.path);
                     w.on('close', function () {
                         thread.writeFinished = true;
-                        try {
-                            fs_1.default.unlinkSync(thread.path);
-                        }
-                        catch (e) {
-                        }
+                        fs_1.default.unlinkSync(thread.path);
                         _this.lastWrited++;
                         _this.checkEnd();
                     });
