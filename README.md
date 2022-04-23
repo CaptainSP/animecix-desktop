@@ -1,5 +1,9 @@
 # AnimeciX Windows
 
+To see the English version: (https://github.com/CaptainSP/animecix-desktop/edit/main/README.md)
+
+-------
+
 [animecix.net](https://animecix.net) web sitesinin masaüstü uygulamasıdır.
 
 [Electron](https://www.electronjs.org/)  ile oluşturulmuştur. Typescript ile yazılmıştır.
