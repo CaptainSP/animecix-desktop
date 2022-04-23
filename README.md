@@ -47,6 +47,14 @@ npm run build #64 ve 32 bit Windows için kurulum dosyası oluşturur.
 npm run build32 #Yalnızca 32 bit Windows için kurulum dosyası oluşturur.
 ```
 
+## İletişim
+
+Herhangi bir sorunuzda benimle iletişim kurmaktan çekinmeyin.
+
+[discord.gg/animecix](https://discord.com/invite/animecix) 
+Discord/CaptainSP#9999
+Mail: [onmuapps@gmail.com](mailto://onmuapps@gmail.com) 
+
 ## License
 
 GPL
