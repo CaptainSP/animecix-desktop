@@ -1,7 +1,7 @@
 
 # AnimeciX Windows
 
-Türkçe versiyonu için: (https://github.com/CaptainSP/animecix-desktop/edit/main/README.md)
+Türkçe versiyonu için: (https://github.com/CaptainSP/animecix-desktop/blob/main/README.md)
 
 Desktop applicaiton of [animecix.net](https://animecix.net)
 
