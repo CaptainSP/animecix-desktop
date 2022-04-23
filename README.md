@@ -13,6 +13,10 @@
 
 ## Kurulum
 
+[Buradan](https://github.com/CaptainSP/animecix-desktop/releases/download/v1.1.5/AnimeciX-Setup-1.1.5.exe) kurulum dosyasını indirin ve açın. AnimeciX kendi kendini kuracak ve otomatik olarak açılacaktır.
+
+## Geliştirme
+
 Cihazınızda NodeJS kurulduğundan emin olun.
 
 ```sh
