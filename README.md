@@ -1,6 +1,6 @@
 # AnimeciX Windows
 
-To see the English version: (https://github.com/CaptainSP/animecix-desktop/main/README-en.md)
+To see the English version: (https://github.com/CaptainSP/animecix-desktop/blob/main/README-en.md)
 
 -------
 
