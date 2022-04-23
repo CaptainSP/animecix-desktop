@@ -3,6 +3,8 @@
 
 Türkçe versiyonu için: (https://github.com/CaptainSP/animecix-desktop/blob/main/README.md)
 
+--------
+
 Desktop applicaiton of [animecix.net](https://animecix.net)
 
 Created with [Electron](https://www.electronjs.org/) and writed with Typescript.
