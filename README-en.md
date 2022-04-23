@@ -54,9 +54,9 @@ npm run build32 # Create only 32bit setup file
 
 Do not hesitate to contact me with any questions.
 
-[discord.gg/animecix](https://discord.com/invite/animecix) 
-Discord/CaptainSP#9999
-Mail: [onmuapps@gmail.com](mailto://onmuapps@gmail.com) 
+-[discord.gg/animecix](https://discord.com/invite/animecix) 
+-Discord/CaptainSP#9999
+-Mail: [onmuapps@gmail.com](mailto://onmuapps@gmail.com) 
 
 ## License
 
