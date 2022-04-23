@@ -1,8 +1,4 @@
 electron-builder.yml
 dist
-files/videos
-files/client
-files/ublock
-files/loader.js
+build
 node_modules
-*.ts

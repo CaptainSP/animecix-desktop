@@ -1,15 +1,15 @@
 {
     "name": "animecix",
-    "version": "1.1.4",
+    "version": "1.1.6",
     "description": "AnimeciX Desktop App",
-    "main": "main.js",
+    "main": "build/main.js",
     "scripts": {
         "compile": "tsc",
         "start": "npm run compile && electron .",
         "buildTypes": "./node_modules/.bin/tsc",
-        "build": "electron-builder build --win --publish never",
+        "build": "electron-builder build --win --x64 --ia32 --publish never",
         "build32": "electron-builder build --win --ia32 --publish never",
-        "deploy": "electron-builder build --win --publish always",
+        "deploy": "electron-builder build --win --x64 --ia32 --publish always",
         "deploy32": "electron-builder build --win --ia32 --publish always"
     },
     "author": "CaptainSP",
@@ -21,9 +21,11 @@
     "dependencies": {
         "@cliqz/adblocker-electron": "^1.22.2",
         "axios": "^0.21.1",
+        "discord-rich-presence": "^0.0.8",
         "electron-updater": "^4.3.9",
         "node-downloader-helper": "^1.0.18",
         "node-fetch": "^2.6.1",
+        "node-gyp": "^9.0.0",
         "node-html-parser": "^4.0.0",
         "nodejs-file-downloader": "^4.7.1",
         "streamsaver": "^2.0.5"
