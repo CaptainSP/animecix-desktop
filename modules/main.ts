@@ -33,13 +33,17 @@ export class Main {
       this.win = new WindowController(win);
       this.win.maximize();
 
+      // Check for updates
       const updater = new Updater(this.win);
       updater.execute();
 
   
+      // Setup the Adblock and rewrite necessary headers 
       const requestController = new RequestController(this.win)
       requestController.execute()
 
+
+      // Setup download controller
       const downloadController = new DownloadController(this.win);
       downloadController.execute();
 
@@ -49,6 +53,7 @@ export class Main {
       const playerController = new PlayerController(this.win)
       playerController.execute()
 
+      // Discord RPC
       const rpcController = new RpcController(this.win)
       rpcController.execute()
 

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head prefix="og:http://ogp.me/ns#">
+	<title>AnimeciX</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		body {
+			margin: 0;
+		}
+	</style>
+	<script type="text/javascript" src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
+</head>
+
+<body id="boddy">
+
+	<div id="vidd"></div>
+
+	<script type="text/javascript">
+
+		var sayyi = 1;
+
+		var file = "";
+
+		jwplayer("vidd").on('error', function () {
+			/*	jwplayer("vidd").load({
+					file: "http://animecix.com/video/broken.mp4",
+					image: "//content.jwplatform.com/thumbs/7RtXk3vl-480.jpg"
+				});
+				jwplayer("vidd").play();*/
+		});
+
+
+		window.onresize = function () {
+			jwplayer("vidd").resize(window.innerWidth, window.innerHeight);
+		}
+
+		const ipcRenderer = nodeRequire('electron').ipcRenderer
+		ipcRenderer.on("Sibnet", (event, video) => {
+			file = video;
+			ipcRenderer.send("canDownload",file);
+			jwplayer("vidd").setup({
+				file: video,
+				//file: "https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_480_1_5MG.mp4",
+				title: "Bilinmeyen Başlık",
+				width: window.innerWidth,
+				height: window.innerHeight,
+				autostart: true,
+				"localization": {
+					"fullscreen": "Tam Ekran",
+					"settings": "Seçenekler",
+					"videoInfo": "Bu Video Hakkında",
+					"rewind": "Geri Sar",
+					"stop": "Durdur",
+					"volume": "Ses Düzeyi",
+					"play": "Oynat",
+					"playbackRates": "Oynatma Hızı",
+					"close": "Kapat",
+					"auto": "Otomatik",
+					"quality": "Kalite",
+				},
+
+
+				image: "",
+				title: "",
+			});
+			jwplayer("vidd").on('complete',() => {
+				ipcRenderer.send("nextEpisode", true)
+			})
+			
+			document.getElementsByClassName('jw-controlbar-right-group')[0].appendChild(myLogo);
+
+			console.log(video)
+		})
+
+		ipcRenderer.send("Setup", true)
+
+	</script>
+</body>
+
+</html>

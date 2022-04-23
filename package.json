@@ -2,7 +2,7 @@
     "name": "animecix",
     "version": "1.1.6",
     "description": "AnimeciX Desktop App",
-    "main": "build/main.js",
+    "main": "main.js",
     "scripts": {
         "compile": "tsc",
         "start": "npm run compile && electron .",

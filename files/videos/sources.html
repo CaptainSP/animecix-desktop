@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head prefix="og:http://ogp.me/ns#">
+	<title>AnimeciX</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		body {
+			margin: 0;
+		}
+	</style>
+	<script type="text/javascript" src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
+</head>
+
+<body id="boddy">
+
+
+	<div id="vidd"></div>
+
+	<script type="text/javascript">
+
+		var sayyi = 1;
+		var identifier
+
+
+		jwplayer("vidd").on('error', function () {
+			/*	jwplayer("vidd").load({
+					file: "http://animecix.com/video/broken.mp4",
+					image: "//content.jwplatform.com/thumbs/7RtXk3vl-480.jpg"
+				});
+				jwplayer("vidd").play();*/
+		});
+
+
+		window.onresize = function () {
+			jwplayer("vidd").resize(window.innerWidth, window.innerHeight);
+		}
+
+		const ipcRenderer = nodeRequire('electron').ipcRenderer
+		ipcRenderer.on("Sources", (event, sources) => {
+			ipcRenderer.send("canDownloadSources", sources);
+			jwplayer("vidd").setup({
+				sources: sources,
+				//file: "https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_480_1_5MG.mp4",
+				title: "Bilinmeyen Başlık",
+				width: window.innerWidth,
+				height: window.innerHeight,
+				autostart: true,
+				"localization": {
+					"fullscreen": "Tam Ekran",
+					"settings": "Seçenekler",
+					"videoInfo": "Bu Video Hakkında",
+					"rewind": "Geri Sar",
+					"stop": "Durdur",
+					"volume": "Ses Düzeyi",
+					"play": "Oynat",
+					"playbackRates": "Oynatma Hızı",
+					"close": "Kapat",
+					"auto": "Otomatik",
+					"quality": "Kalite",
+				},
+
+
+				image: "",
+				title: "",
+			});
+			jwplayer("vidd").on('complete', () => {
+				ipcRenderer.send("nextEpisode", true)
+			})
+
+
+			jwplayer("vidd").once('play', function () {
+				let cookieData = localStorage.getItem('data_' + identifier);
+				if (!cookieData) {
+					return
+				}
+				const [resumeAt, duration] = cookieData.split(':');
+				console.log("LAST-RESUME", resumeAt)
+
+				jwplayer("vidd").seek(resumeAt);
+
+
+
+
+			});
+
+			jwplayer("vidd").on('time', function (e) {
+				localStorage.setItem('data_' + identifier, `${Math.floor(e.position)}:${jwplayer("vidd").getDuration()}`);
+				console.log("LAST",identifier, `${Math.floor(e.position)}:${jwplayer("vidd").getDuration()}`)
+			});
+
+		})
+
+		ipcRenderer.on('details', (event, url, id) => {
+			identifier = id
+		})
+
+		if (window.location.href.includes("#odnok")) {
+			ipcRenderer.send("Odnok", true)
+		} else {
+			ipcRenderer.send("Sources", true)
+		}
+		ipcRenderer.send("getDetails", true)
+	</script>
+</body>
+
+</html>

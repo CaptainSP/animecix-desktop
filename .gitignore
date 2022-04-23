@@ -1,4 +1,4 @@
 electron-builder.yml
 dist
-build
 node_modules
+*.js
