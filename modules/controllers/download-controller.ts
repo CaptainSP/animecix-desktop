@@ -220,17 +220,23 @@ export class DownloadController {
   }
 
   onDownloadErrorListener(error: string) {
+    // Reset the progress bar
+    this.win.setProgress(0);
     console.log("DOWNLOAD ERROR", error);
     this.checkToStartDownload();
     this.sendDownloadsToWindow();
   }
 
   onDownloadCanceledListener() {
+    // Reset the progress bar
+    this.win.setProgress(0);
     this.checkToStartDownload();
     this.sendDownloadsToWindow();
   }
 
   onDownloadFinishListener() {
+    // Reset the progress bar
+    this.win.setProgress(0);
     if (this.getFirstQueriedDownloadItem() === undefined) {
       NotificationHelper.createAndShow("Tüm indirmeler tamamlandı");
     } else {
@@ -244,10 +250,14 @@ export class DownloadController {
     speed: number,
     totalSize: number
   ) {
+    // Send the download progress to the window
     this.sendToWindow("downloadProgress", {
       speed: speed,
       progress: progress,
       totalSize: totalSize,
     });
+
+    // Update the progress bar with the current progress of the download. (In task bar)
+    this.win.setProgress(progress / 100);
   }
 }

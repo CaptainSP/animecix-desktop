@@ -1,4 +1,14 @@
-import { BrowserWindow, ipcMain, WebContents } from "electron";
+import {
+  BrowserWindow,
+  ipcMain,
+  WebContents,
+  app,
+  dialog,
+  session,
+  shell,
+} from "electron";
+import path from "path";
+import { Deeplink } from "electron-deeplink";
 
 export class WindowController {
   private isOdnok = false;
@@ -16,10 +26,29 @@ export class WindowController {
     return this.win == null || this.win.isDestroyed();
   }
 
+  // Set the progress bar to the given percentage. It will be shown in task bar
+  public setProgress(progress: number) {
+    this.win?.setProgressBar(progress);
+  }
+
+  reload() {
+    this.win?.reload();
+  }
+
   constructor(public win: BrowserWindow | null) {
     this.setUserAgent();
     this.destoryWhenExit();
     this.listenFullScreen();
+    this.registerDeepLinks();
+    this.setOpenHandler();
+  }
+
+  // Register deep links (animecix://) for the app.
+  registerDeepLinks() {
+    const win = this.win;
+
+    if (win) {
+    }
   }
 
   minimize() {
@@ -91,8 +120,16 @@ export class WindowController {
 
   public setOpenHandler() {
     if (this.win != null) {
+      this.win.webContents.on("new-window", (e, url) => {
+        if (url.includes("secure/auth") || url.includes("discord.gg")) {
+          e.preventDefault();
+          shell.openExternal(url);
+        }
+      });
+
       this.win.webContents.setWindowOpenHandler(({ url }) => {
         console.log("OPEN", url);
+
         if (
           url.includes("disqus") ||
           url.includes("animecix") ||

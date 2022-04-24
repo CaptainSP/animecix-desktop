@@ -1,6 +1,5 @@
-import { BrowserWindow, app, ipcMain, WebFrameMain } from "electron";
+import { BrowserWindow, app } from "electron";
 import path from "path";
-import { ElectronBlocker } from "@cliqz/adblocker-electron";
 import { Updater } from "./updater";
 import { WindowController } from "./controllers/window-controller";
 import { DownloadController } from "./controllers/download-controller";
@@ -8,58 +7,74 @@ import { SiteMenuController } from "./controllers/site-menu-controller";
 import { PlayerController } from "./controllers/player-controller";
 import { RequestController } from "./controllers/request-controller";
 import { RpcController } from "./controllers/rpc-controller";
+import { AuthController } from "./controllers/auth-controller";
+import { DeeplinkController } from "./controllers/deeplink-controller";
 
 export class Main {
-  
   win: WindowController | null = null;
 
- constructor(public dir: any) {}
+  constructor(public dir: any) {}
 
   run() {
-    app.on("ready", () => {
-      app.setAppUserModelId("AnimeciX");
-      const win = new BrowserWindow({
-        webPreferences: {
-          nodeIntegration: true,
-          contextIsolation: false,
-          nodeIntegrationInSubFrames: true,
-          preload: this.dir + "/files/preload.js",
-          nativeWindowOpen: true,
-        },
-        title: "AnimeciX",
-        icon: path.join(this.dir, "files", "icon.png"),
-        frame: false,
+
+    const gotTheLock = app.requestSingleInstanceLock()
+
+    if (!gotTheLock) {
+      app.quit()
+    } else {
+      app.whenReady().then(() => {
+      
+        app.setAppUserModelId("AnimeciX");
+        const win = new BrowserWindow({
+          webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            nodeIntegrationInSubFrames: true,
+            preload: this.dir + "/files/preload.js",
+            nativeWindowOpen: true,
+          },
+          title: "AnimeciX",
+          icon: path.join(this.dir, "files", "icon.png"),
+          frame: false,
+        });
+        this.win = new WindowController(win);
+        this.win.maximize();
+  
+        // Check for updates
+        const updater = new Updater(this.win);
+        updater.execute();
+  
+        // Setup the Adblock and rewrite necessary headers
+        const requestController = new RequestController(this.win);
+        requestController.execute();
+  
+        // Setup download controller
+        const downloadController = new DownloadController(this.win);
+        downloadController.execute();
+  
+        const siteMenuController = new SiteMenuController(this.win);
+        siteMenuController.execute();
+  
+        const playerController = new PlayerController(this.win);
+        playerController.execute();
+  
+        // Discord RPC
+        const rpcController = new RpcController(this.win);
+        rpcController.execute();
+  
+        // Register Auth Controller
+        const authController = new AuthController(this.win);
+  
+  
+        const deeplinkController = new DeeplinkController(
+          this.win,
+          authController
+        );
+        deeplinkController.execute();
+  
+        win.loadURL(process.env.APP_URL as string);
       });
-      this.win = new WindowController(win);
-      this.win.maximize();
+    }
 
-      // Check for updates
-      const updater = new Updater(this.win);
-      updater.execute();
-
-  
-      // Setup the Adblock and rewrite necessary headers 
-      const requestController = new RequestController(this.win)
-      requestController.execute()
-
-
-      // Setup download controller
-      const downloadController = new DownloadController(this.win);
-      downloadController.execute();
-
-      const siteMenuController = new SiteMenuController(this.win);
-      siteMenuController.execute()
-
-      const playerController = new PlayerController(this.win)
-      playerController.execute()
-
-      // Discord RPC
-      const rpcController = new RpcController(this.win)
-      rpcController.execute()
-
-
-      win.loadURL("https://animecix.net");
-  
-    });
   }
 }
