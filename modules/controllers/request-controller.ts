@@ -5,6 +5,8 @@ import { WindowController } from "./window-controller";
 export class RequestController {
   private blocker: ElectronBlocker | null = null;
 
+  private csrfToken: string | null = null;
+
   private filter = {
     urls: ["*://*/*"],
   };
@@ -14,6 +16,11 @@ export class RequestController {
   public execute() {
     this.setupAdblock();
     this.listenHeaders();
+    this.listenRequests();
+  }
+
+  public setCsrfToken(token: string) {
+    this.csrfToken = token;
   }
 
   private setupAdblock() {
@@ -38,6 +45,12 @@ export class RequestController {
 
         details.requestHeaders["User-Agent"] =
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0";
+
+        if (this.csrfToken && details.url.includes("animecix")) {
+          delete details.requestHeaders["X-XSRF-TOKEN"];
+          console.log("owerrite", details.requestHeaders, details.url);
+          details.requestHeaders["X-CSRF-TOKEN"] = this.csrfToken;
+        }
 
         callback({ requestHeaders: details.requestHeaders });
       }
