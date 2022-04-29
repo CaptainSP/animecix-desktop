@@ -26,6 +26,8 @@ export class Main {
       
         app.setAppUserModelId("AnimeciX");
         const win = new BrowserWindow({
+          show:false,
+          backgroundColor:"#1D1D1D",
           webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -38,7 +40,17 @@ export class Main {
           frame: false,
         });
         this.win = new WindowController(win);
-        this.win.maximize();
+
+        // Do not show the window if page is not loaded
+        
+        win.minimize();
+        win.setProgressBar(100)
+        win.on('ready-to-show',()=> {
+          win.maximize();
+          win.show();
+          win.setProgressBar(0)
+        })
+
   
         // Check for updates
         const updater = new Updater(this.win);

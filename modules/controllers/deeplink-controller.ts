@@ -28,7 +28,11 @@ export class DeeplinkController {
           return item.includes("animecix://");
         });
         if (url !== undefined) {
-          this.authController.onLinkReceived(url);
+          if (url.includes("animecix://login")) {
+            this.authController.onLinkReceived(url);
+          } else {
+            win.loadURL(url.replace("animecix://", "https://"));
+          }
         }
         if (win.isMinimized()) win.restore();
         win.focus();

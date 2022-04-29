@@ -31,6 +31,10 @@ export class WindowController {
     this.win?.setProgressBar(progress);
   }
 
+  unmaximize() {
+    this.win?.unmaximize();
+  }
+
   reload() {
     this.win?.reload();
   }
@@ -41,6 +45,27 @@ export class WindowController {
     this.listenFullScreen();
     this.registerDeepLinks();
     this.setOpenHandler();
+    this.setErrorHandler();
+  }
+
+  private setErrorHandler() {
+    this.win?.webContents.on("did-fail-load", () => {
+      if (this.win != null) {
+        dialog
+          .showMessageBox(this.win, {
+            title: "AnimeciX",
+            message: "Sayfa yüklenemedi. Lütfen internet bağlantınızı kopntrol edin veya bizimle iletişime geçin.",
+            buttons: ["Tekrar Dene", "Çıkış Yap"],
+          })
+          .then((data) => {
+            if (data.response == 0) {
+              this.reload();
+            } else if (data.response == 1) {
+              app.exit();
+            }
+          });
+      }
+    });
   }
 
   // Register deep links (animecix://) for the app.
