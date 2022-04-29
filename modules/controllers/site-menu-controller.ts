@@ -22,7 +22,7 @@ export class SiteMenuController {
       ipcMain.on("max", (event) => {
         if (this.win != null) {
           if (this.win.isMaximized()) {
-            this.win.maximize();
+            this.win.unmaximize();
           } else {
             this.win.maximize();
           }

@@ -9,6 +9,7 @@ export class Updater {
     autoUpdater.checkForUpdates();
 
     autoUpdater.on("update-available", (info: UpdateInfo) => {
+      
       NotificationHelper.createAndShow(
         "AnimeciX Güncelleniyor...",
         "Güncelleme indiriliyor"
