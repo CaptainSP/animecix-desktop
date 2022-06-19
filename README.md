@@ -1,6 +1,6 @@
 # AnimeciX Windows
 
-To see the English version: (https://github.com/CaptainSP/animecix-desktop/blob/main/README-en.md)
+[Click Here To see the English version](https://github.com/CaptainSP/animecix-desktop/blob/main/README-en.md)
 
 -------
 
@@ -56,7 +56,7 @@ npm run build32 #Yalnızca 32 bit Windows için kurulum dosyası oluşturur.
 Herhangi bir sorunuzda benimle iletişim kurmaktan çekinmeyin.
 
 - [discord.gg/animecix](https://discord.com/invite/animecix) 
-- Discord/CaptainSP#9999
+- Discord: [CaptainSP#9999](https://discord.com/users/344220078465744896)
 - Mail: [onmuapps@gmail.com](mailto://onmuapps@gmail.com) 
 
 ## License
