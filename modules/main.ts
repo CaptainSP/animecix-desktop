@@ -83,6 +83,8 @@ export class Main {
           authController
         );
         deeplinkController.execute();
+
+      
   
         win.loadURL(process.env.APP_URL as string);
       });

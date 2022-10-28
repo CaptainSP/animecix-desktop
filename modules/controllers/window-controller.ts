@@ -45,27 +45,6 @@ export class WindowController {
     this.listenFullScreen();
     this.registerDeepLinks();
     this.setOpenHandler();
-    this.setErrorHandler();
-  }
-
-  private setErrorHandler() {
-    this.win?.webContents.on("did-fail-load", () => {
-      if (this.win != null) {
-        dialog
-          .showMessageBox(this.win, {
-            title: "AnimeciX",
-            message: "Sayfa yüklenemedi. Lütfen internet bağlantınızı kopntrol edin veya bizimle iletişime geçin.",
-            buttons: ["Tekrar Dene", "Çıkış Yap"],
-          })
-          .then((data) => {
-            if (data.response == 0) {
-              this.reload();
-            } else if (data.response == 1) {
-              app.exit();
-            }
-          });
-      }
-    });
   }
 
   // Register deep links (animecix://) for the app.
@@ -113,9 +92,17 @@ export class WindowController {
 
   public currentFrameUrl: string | null = null;
 
-  public sendToWebContents(key: string, data: any) {
+  public sendToWebContents(key: string, ...data: any) {
     if (this.win != null && !this.win.isDestroyed()) {
-      this.win.webContents.send(key, data);
+      this.win.webContents.send(key, ...data);
+    }
+  }
+
+  public sendToFrame(key: string, ...data: any) {
+    if (!this.win?.isDestroyed()) {
+      this.win?.webContents?.mainFrame.frames.forEach((frame) => {
+        frame.send(key, ...data);
+      });
     }
   }
 
@@ -145,8 +132,16 @@ export class WindowController {
 
   public setOpenHandler() {
     if (this.win != null) {
+      ipcMain.on("openLink", (event, link:string) => {
+        if (!link.startsWith('http')) {
+          link = process.env.APP_URL + '/' + link
+        }
+        console.log(link)
+        shell.openExternal(link);
+      });
+
       this.win.webContents.on("new-window", (e, url) => {
-        if (url.includes("secure/auth") || url.includes("discord.gg")) {
+        if (url.includes("discord.gg")) {
           e.preventDefault();
           shell.openExternal(url);
         }
