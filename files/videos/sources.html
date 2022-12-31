@@ -11,8 +11,28 @@
         padding: 0;
         overflow: hidden;
       }
+
+      .skip {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        margin-right: 6%;
+        margin-bottom: 8%;
+        background-color: whitesmoke;
+        color: black;
+        font-size: 20px;
+        border-radius: 12px;
+        padding: 12px;
+        border-style: none;
+        z-index: 999999;
+        display: none;
+        cursor: pointer;
+      }
+
+      .skip:hover {
+        background-color: white;
+      }
     </style>
-    
   </head>
 
   <body id="boddy">
@@ -27,6 +47,10 @@
       var identifier;
 
       var captions = [];
+
+      var skip = document.getElementById("skip");
+      var jumpFrom = 0;
+      var jumpTo = 0;
 
       jwplayer("vidd").on("error", function () {
         /*	jwplayer("vidd").load({
@@ -54,6 +78,7 @@
           title: "Bilinmeyen Başlık",
           width: window.innerWidth,
           height: window.innerHeight,
+          playbackRateControls: [0.75, 1, 1.25, 1.5],
           autostart: true,
           localization: {
             fullscreen: "Tam Ekran",
@@ -72,9 +97,12 @@
           image: "",
           title: "",
         });
+
         jwplayer("vidd").on("complete", () => {
           ipcRenderer.send("nextEpisode", true);
         });
+
+
 
         jwplayer("vidd").once("play", function () {
           let cookieData = localStorage.getItem("data_" + identifier);
@@ -110,6 +138,26 @@
             `${Math.floor(e.position)}:${jwplayer("vidd").getDuration()}`
           );
           ipcRenderer.send("time", parseInt(e.position * 1000), isPlaying);
+          if (e.position > jumpFrom && e.position < jumpTo) {
+            //document.getElementById("vidd").removeChild(skip)
+            skip = document.createElement("button");
+            skip.className = "skip";
+            skip.id = skip;
+            skip.innerHTML = "İntroyu Atla";
+            skip.addEventListener("click", () => {
+              jwplayer("vidd").seek(jumpTo);
+            });
+            document.getElementById("vidd").appendChild(skip);
+
+            skip.style.display = "block";
+          } else {
+            var skips = document.querySelectorAll(".skip");
+            for (var i = 0; i < skips.length; i++) {
+              skips[i].style.display = "none";
+              document.getElementById("vidd").removeChild(skips[i]);
+            }
+            skip.style.display = "none";
+          }
         });
 
         window.addEventListener(
@@ -195,6 +243,12 @@
 
       ipcRenderer.on("details", (event, url, id) => {
         identifier = id;
+        fetch("https://animecix.net/secure/most-sought/" + id)
+          .then((data) => data.json())
+          .then((response) => {
+            jumpTo = response.to / 1000;
+            jumpFrom = response.from / 1000;
+          });
       });
 
       if (window.location.href.includes("#odnok")) {

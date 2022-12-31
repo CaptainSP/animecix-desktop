@@ -51,6 +51,7 @@ export class Main {
           win.setProgressBar(0)
         })
 
+        win.webContents.openDevTools()
   
         // Check for updates
         const updater = new Updater(this.win);

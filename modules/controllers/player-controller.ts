@@ -7,7 +7,7 @@ export class PlayerController {
   constructor(private win: WindowController) {}
 
   private isOdnok = false;
-  private captions : any[] = []
+  private captions: any[] = [];
 
   public execute() {
     ipcMain.on("getDetails", (event, ok) => {
@@ -28,7 +28,7 @@ export class PlayerController {
     });
 
     ipcMain.on("playPause", (event, play) => {
-      console.log("playPause",play)
+      console.log("playPause", play);
       this.win.sendToWebContents("playPause", play);
     });
 
@@ -50,19 +50,19 @@ export class PlayerController {
   }
 
   public listenCaptions() {
-    ipcMain.on('captions',(event,captions) => {
-      this.captions = captions
-      this.win.sendToFrame('captions',captions)
-    })
+    ipcMain.on("captions", (event, captions) => {
+      this.captions = captions;
+      this.win.sendToFrame("captions", captions);
+    });
   }
 
   public listenGw() {
     ipcMain.on("gwPlayPause", (event, play) => {
-      console.log("Play Pause",play)
+      console.log("Play Pause", play);
       this.win.sendToFrame("playPause", play);
     });
     ipcMain.on("gwTime", (event, time, play) => {
-      console.log("On Time",time)
+      console.log("On Time", time);
       if (!this.win.isDestroyed) {
         this.win.webContents?.mainFrame.frames.forEach((frame) => {
           frame.send("time", time, play);
@@ -78,6 +78,7 @@ export class PlayerController {
         this.win.identifier = identifier;
       }
       this.isOdnok = false;
+      this.win.sendToWebContents("updateCurrent", currentUrl);
     });
   }
 
@@ -91,7 +92,7 @@ export class PlayerController {
     ipcMain.on("StandartSetup", (event, file) => {
       if (!this.win.isDestroyed) {
         this.win.webContents?.mainFrame.frames.forEach((frame) => {
-          frame.send("captions",this.captions)
+          frame.send("captions", this.captions);
           frame.send("Standart", this.win.standart);
         });
       }
@@ -100,7 +101,7 @@ export class PlayerController {
     ipcMain.on("Sources", (event, ok) => {
       if (!this.win.isDestroyed) {
         this.win.webContents?.mainFrame.frames.forEach((frame) => {
-          frame.send("captions",this.captions)
+          frame.send("captions", this.captions);
           frame.send("Sources", this.win.sources);
         });
       }
@@ -112,7 +113,7 @@ export class PlayerController {
           if (!this.win.isDestroyed) {
             this.win.webContents?.mainFrame.frames.forEach((frame) => {
               this.win.standart = video;
-              frame.send("captions",this.captions)
+              frame.send("captions", this.captions);
               frame.send("Standart", video);
             });
           }
@@ -161,7 +162,7 @@ export class PlayerController {
               if (this.win != null && !this.win.isDestroyed) {
                 this.win.webContents?.mainFrame.frames.forEach((frame) => {
                   console.log(this.win.sources);
-                  frame.send("captions",this.captions)
+                  frame.send("captions", this.captions);
                   frame.send("Sources", this.win.sources);
                 });
               }
