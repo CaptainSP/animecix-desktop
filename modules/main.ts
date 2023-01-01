@@ -51,6 +51,7 @@ export class Main {
           win.setProgressBar(0)
         })
 
+        win.webContents.openDevTools()
   
         // Check for updates
         const updater = new Updater(this.win);
@@ -83,6 +84,8 @@ export class Main {
           authController
         );
         deeplinkController.execute();
+
+      
   
         win.loadURL(process.env.APP_URL as string);
       });

@@ -1,121 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head prefix="og:http://ogp.me/ns#">
+    <title>AnimeciX</title>
+    <meta charset="utf-8" />
+    <style type="text/css">
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        overflow: hidden;
+      }
 
-<head prefix="og:http://ogp.me/ns#">
-	<title>AnimeciX</title>
-	<meta charset="utf-8">
-	<style type="text/css">
-		body {
-			margin: 0;
-		}
-	</style>
-	<script type="text/javascript" src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
-</head>
+      .skip {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        margin-right: 6%;
+        margin-bottom: 8%;
+        background-color: whitesmoke;
+        color: black;
+        font-size: 20px;
+        border-radius: 12px;
+        padding: 12px;
+        border-style: none;
+        z-index: 999999;
+        display: none;
+        cursor: pointer;
+      }
 
-<body id="boddy">
+      .skip:hover {
+        background-color: white;
+      }
+    </style>
+  </head>
 
-	<div id="reklamtrk"
-		style="display: none; color:white !important; width: 100%;height: 100%;text-align: center; background-color: rgba(0,0,0,0.8); position: absolute;z-index: 9999;"
-		oncontextmenu="return false;">
-		<button id="reklamtrk_btn"
-			style="font-size: 16px; margin-top: 12.5%; background-color: rgba(0,0,0,0.9); border: none;color: white;">Lütfen
-			Bekleyin</button>
-		<div style="height: 5%;"></div>
-		<!-- <script id="reklamtrk_script" onerror="document.getElementById('reklamtrk').style.display = 'none';" onload="reklamtrk_load();" type="text/javascript" src="https://www.reklamtrk.com/ads/banner_cpc.asp?id=3F96D185602336AB01C95D881A4A3C03A9EB4578&do=41C27AA9F82FCFCD0869BA432058DCCF9FE8C53F&px=300x250"> </script> -->
-	</div>
+  <body id="boddy">
+    <div id="vidd"></div>
+    <script src="https://cdn.jsdelivr.net/npm/assjs/dist/ass.js"></script>
+    <script
+      type="text/javascript"
+      src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"
+    ></script>
+    <script type="text/javascript">
+      var sayyi = 1;
+      var identifier;
 
-	<div id="vidd"></div>
+      var skip;
+      var jumpFrom = 0;
+      var jumpTo = 0;
 
-	<script type="text/javascript">
+      var captions = [];
 
-		var sayyi = 1;
-		var identifier
-
-
-
-		jwplayer("vidd").on('error', function () {
-			/*	jwplayer("vidd").load({
+      jwplayer("vidd").on("error", function () {
+        /*	jwplayer("vidd").load({
 					file: "http://animecix.com/video/broken.mp4",
 					image: "//content.jwplatform.com/thumbs/7RtXk3vl-480.jpg"
 				});
 				jwplayer("vidd").play();*/
-		});
+      });
 
+      window.onresize = function () {
+        jwplayer("vidd").resize(window.innerWidth, window.innerHeight);
+      };
 
-		window.onresize = function () {
-			jwplayer("vidd").resize(window.innerWidth, window.innerHeight);
-		}
+      const ipcRenderer = nodeRequire("electron").ipcRenderer;
 
-		const ipcRenderer = nodeRequire('electron').ipcRenderer
-		ipcRenderer.on("Standart", (event, video) => {
-			ipcRenderer.send("canDownload", video);
-			jwplayer("vidd").setup({
-				file: video,
-				type: 'mp4',
-				//file: "https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_480_1_5MG.mp4",
-				title: "Bilinmeyen Başlık",
-				width: window.innerWidth,
-				height: window.innerHeight,
-				autostart: true,
-				"localization": {
-					"fullscreen": "Tam Ekran",
-					"settings": "Seçenekler",
-					"videoInfo": "Bu Video Hakkında",
-					"rewind": "Geri Sar",
-					"stop": "Durdur",
-					"volume": "Ses Düzeyi",
-					"play": "Oynat",
-					"playbackRates": "Oynatma Hızı",
-					"close": "Kapat",
-					"auto": "Otomatik",
-					"quality": "Kalite",
-				},
+      ipcRenderer.on("captions", (event, caps) => {
+        captions = caps;
+      });
 
+      ipcRenderer.on("Standart", (event, video) => {
+        ipcRenderer.send("canDownload", video);
+        jwplayer("vidd").setup({
+          file: video,
+          type: "mp4",
+          playbackRateControls: [0.75, 1, 1.25, 1.5],
+          //file: "https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_480_1_5MG.mp4",
+          title: "Bilinmeyen Başlık",
+          width: window.innerWidth,
+          height: window.innerHeight,
+          autostart: true,
+          localization: {
+            fullscreen: "Tam Ekran",
+            settings: "Seçenekler",
+            videoInfo: "Bu Video Hakkında",
+            rewind: "Geri Sar",
+            stop: "Durdur",
+            volume: "Ses Düzeyi",
+            play: "Oynat",
+            playbackRates: "Oynatma Hızı",
+            close: "Kapat",
+            auto: "Otomatik",
+            quality: "Kalite",
+          },
 
-				image: "",
-				title: "",
-			});
-			jwplayer("vidd").on('complete', () => {
-				ipcRenderer.send("nextEpisode", true)
-			})
+          image: "",
+          title: "",
+        });
+        jwplayer("vidd").on("complete", () => {
+          ipcRenderer.send("nextEpisode", true);
+        });
 
-			jwplayer("vidd").once('play', function () {
-				let cookieData = localStorage.getItem('data_' + identifier);
-				if (!cookieData) {
-					return
-				}
-				const [resumeAt, duration] = cookieData.split(':');
-				console.log("LAST-RESUME", resumeAt)
+        jwplayer("vidd").once("play", function () {
+          let cookieData = localStorage.getItem("data_" + identifier);
+          if (!cookieData) {
+            return;
+          }
+          const [resumeAt, duration] = cookieData.split(":");
+          console.log("LAST-RESUME", resumeAt);
 
-				jwplayer("vidd").seek(resumeAt);
+          jwplayer("vidd").seek(resumeAt);
+          isPlaying = true;
 
+          ipcRenderer.send("playPause", isPlaying);
+        });
 
+        jwplayer("vidd").on("play", function () {
+          isPlaying = true;
 
+          ipcRenderer.send("playPause", isPlaying);
+        });
 
-			});
+        jwplayer("vidd").on("pause", function (event) {
+          isPlaying = false;
 
-			jwplayer("vidd").on('time', function (e) {
-				localStorage.setItem('data_' + identifier, `${Math.floor(e.position)}:${jwplayer("vidd").getDuration()}`);
-				console.log("LAST",identifier, `${Math.floor(e.position)}:${jwplayer("vidd").getDuration()}`)
-			});
+          ipcRenderer.send("playPause", isPlaying, event.pauseReason);
+        });
 
+        jwplayer("vidd").on("time", function (e) {
+          localStorage.setItem(
+            "data_" + identifier,
+            `${Math.floor(e.position)}:${jwplayer("vidd").getDuration()}`
+          );
+          console.log(
+            "LAST",
+            identifier,
+            `${Math.floor(e.position)}:${jwplayer("vidd").getDuration()}`
+          );
+          ipcRenderer.send("time", parseInt(e.position * 1000), isPlaying);
 
-		});
+          if (e.position > jumpFrom && e.position < jumpTo) {
+           
+              //document.getElementById("vidd").removeChild(skip)
+              skip = document.createElement("button");
+              skip.className = "skip";
+              skip.id = skip;
+              skip.innerHTML = "İntroyu Atla";
+              skip.addEventListener("click",()=> {
+                jwplayer("vidd").seek(jumpTo);
+              })
+              document.getElementById("vidd").appendChild(skip);
 
+              
+              skip.style.display = "block";
+            
+          } else {
+            var skips = document.querySelectorAll(".skip")
+            for (var i = 0; i < skips.length; i++) {
+              skips[i].style.display = 'none';
+              document.getElementById("vidd").removeChild(skips[i]);
+            }
+            skip.style.display = "none";
+          }
+        });
 
-		ipcRenderer.on('details', (event, url, id) => {
-			identifier = id
-		})
+        window.addEventListener(
+          "message",
+          (event) => {
+            const data = event.data;
+            if (data.action == "changeSub") {
+              const index = data.index;
+              selectSub(index);
+              //jwplayer("vidd").setCurrentCaptions(index);
+            }
+          },
+          false
+        );
 
-		if (window.location.href.includes("#sibnet")) {
-			ipcRenderer.send("Setup", true);
-			
-			console.log("Sibnet")
-		} else {
-			ipcRenderer.send("StandartSetup", true);
-		}
-		ipcRenderer.send("getDetails", true)
-	</script>
-</body>
+        if (captions && captions.length > 0) {
+          selectSub(
+            captions.findIndex((item) => {
+              return (
+                item.language ==
+                (localStorage.getItem("prefered_language") || "tr")
+              );
+            }) + 1 || 1
+          );
+        }
 
+        function selectSub(index) {
+          if (index == 0) {
+            if (ass != null) {
+              ass.hide();
+              ass.destroy();
+            }
+          } else {
+            fetch(captions[index - 1].url)
+              .then((res) => res.text())
+              .then((text) => {
+                ass = new ASS(text, document.querySelector("video"));
+                ass.show();
+                window.parent.postMessage(
+                  {
+                    action: "captionsChanged",
+                    track: index,
+                  },
+                  "https://animecix.net/"
+                );
+                localStorage.setItem(
+                  "prefered_language",
+                  captions[index - 1].language
+                );
+                setInterval(() => {
+                  document.querySelector("video").style.position = "fixed";
+                  document.querySelector("video").style.width = "100%";
+                  document.querySelector("video").style.height = "100%";
+                  if (ass != null) {
+                    ass.resize();
+                  }
+                }, 1000);
+              });
+          }
+        }
+      });
+
+      ipcRenderer.on("time", (event, time, play) => {
+        console.log("Time Called");
+        const pos = jwplayer("vidd").getPosition() * 1000;
+        if (Math.abs(time - pos) > 5000) {
+          jwplayer("vidd").seek(time / 1000);
+        }
+        if (play) {
+          jwplayer("vidd").play();
+        } else {
+          jwplayer("vidd").pause();
+        }
+      });
+
+      ipcRenderer.on("playPause", (event, play) => {
+        if (play) {
+          jwplayer("vidd").play();
+        } else {
+          jwplayer("vidd").pause();
+        }
+      });
+
+      ipcRenderer.on("details", (event, url, id) => {
+        identifier = id;
+        fetch("https://animecix.net/secure/most-sought/" + id)
+          .then((data) => data.json())
+          .then((response) => {
+            jumpTo = response.to / 1000;
+            jumpFrom = response.from / 1000;
+          });
+      });
+
+      if (window.location.href.includes("#sibnet")) {
+        ipcRenderer.send("Setup", true);
+
+        console.log("Sibnet");
+      } else {
+        ipcRenderer.send("StandartSetup", true);
+      }
+      ipcRenderer.send("getDetails", true);
+    </script>
+  </body>
 </html>
