@@ -78,7 +78,11 @@ export class PlayerController {
         this.win.identifier = identifier;
       }
       this.isOdnok = false;
-      this.win.sendToWebContents("updateCurrent", currentUrl);
+      if (!currentUrl.includes("best-video")) {
+        this.win.sendToWebContents("updateCurrent", currentUrl);
+        console.log("update",currentUrl)
+      }
+      
     });
   }
 
