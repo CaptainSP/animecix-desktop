@@ -3,6 +3,13 @@
   <head prefix="og:http://ogp.me/ns#">
     <title>AnimeciX</title>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="plyr.css" />
+    <link
+      href="http://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet"
+      type="text/css"
+    />
+
     <style type="text/css">
       body {
         margin: 0;
@@ -10,10 +17,12 @@
         height: 100%;
         padding: 0;
         overflow: hidden;
+        background-color: black;
+        font-family: "Roboto", sans-serif;
       }
 
       .skip {
-        position: fixed;
+        position: absolute;
         bottom: 0;
         right: 0;
         margin-right: 6%;
@@ -32,36 +41,112 @@
       .skip:hover {
         background-color: white;
       }
+
+      [button="logo"] {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+
+      #vidd .jw-button-color.jw-toggle:not(.jw-icon-cast),
+      #vidd .jw-button-color:hover:not(.jw-icon-cast),
+      #vidd .jw-button-color:focus:not(.jw-icon-cast),
+      #vidd .jw-button-color.jw-toggle.jw-off:hover:not(.jw-icon-cast) {
+        color: rgba(16, 112, 188, 0.8) !important;
+      }
+
+      #vidd .jw-option.jw-active-option,
+      #vidd .jw-option:not(.jw-active-option):hover,
+      #vidd .jw-option:not(.jw-active-option):focus,
+      #vidd .jw-settings-content-item:hover,
+      #vidd .jw-nextup-tooltip:hover,
+      #vidd .jw-nextup-tooltip:focus,
+      #vidd .jw-nextup-close:hover {
+        color: rgba(16, 112, 188, 0.8) !important;
+      }
+
+      .jw-rightclick {
+        display: none !important;
+      }
+
+      @keyframes ldio-86wn3hglslo {
+        0% {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        100% {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+      .ldio-86wn3hglslo div {
+        position: absolute;
+        width: 66.98px;
+        height: 66.98px;
+        border: 7.88px solid #00b3ff;
+        border-top-color: transparent;
+        border-radius: 50%;
+      }
+      .ldio-86wn3hglslo div {
+        animation: ldio-86wn3hglslo 1s linear infinite;
+        top: 98.5px;
+        left: 98.5px;
+      }
+      .loadingio-spinner-rolling-t58wzkaf4ck {
+        width: 197px;
+        height: 197px;
+        display: inline-block;
+        overflow: hidden;
+        background: none;
+      }
+      .ldio-86wn3hglslo {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform: translateZ(0) scale(1);
+        backface-visibility: hidden;
+        transform-origin: 0 0; /* see note above */
+      }
+      .ldio-86wn3hglslo div {
+        box-sizing: content-box;
+      }
+
+      .loading {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     </style>
   </head>
 
   <body id="boddy">
-    <div id="vidd"></div>
-    <script src="https://cdn.jsdelivr.net/npm/assjs/dist/ass.js"></script>
-    <script
-      type="text/javascript"
-      src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"
-    ></script>
+    <video style="display: none" id="vidd"></video>
+    <div class="loading">
+      <div class="loadingio-spinner-rolling-t58wzkaf4ck">
+        <div class="ldio-86wn3hglslo">
+          <div></div>
+        </div>
+      </div>
+    </div>
+    <script src="plyr.min.js"></script>
+    <script src="./ass.js"></script>
     <script type="text/javascript">
-      var sayyi = 1;
-      var identifier;
-
       var captions = [];
 
       var skip = document.getElementById("skip");
       var jumpFrom = 0;
       var jumpTo = 0;
-
-      jwplayer("vidd").on("error", function () {
-        /*	jwplayer("vidd").load({
-					file: "http://animecix.com/video/broken.mp4",
-					image: "//content.jwplatform.com/thumbs/7RtXk3vl-480.jpg"
-				});
-				jwplayer("vidd").play();*/
-      });
+      var sources;
+      var player;
 
       window.onresize = function () {
-        jwplayer("vidd").resize(window.innerWidth, window.innerHeight);
+        document.querySelector("#vidd").style.width = window.innerWidth + "px";
+        document.querySelector("#vidd").style.height =
+          window.innerHeight + "px";
+        if (ass != null) {
+          ass.resize();
+        }
       };
 
       const ipcRenderer = nodeRequire("electron").ipcRenderer;
@@ -70,174 +155,39 @@
         captions = caps;
       });
 
-      ipcRenderer.on("Sources", (event, sources) => {
-        ipcRenderer.send("canDownloadSources", sources);
-        jwplayer("vidd").setup({
-          sources: sources,
-          //file: "https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_480_1_5MG.mp4",
-          title: "Bilinmeyen Başlık",
-          width: window.innerWidth,
-          height: window.innerHeight,
-          playbackRateControls: [0.75, 1, 1.25, 1.5],
-          autostart: true,
-          localization: {
-            fullscreen: "Tam Ekran",
-            settings: "Seçenekler",
-            videoInfo: "Bu Video Hakkında",
-            rewind: "Geri Sar",
-            stop: "Durdur",
-            volume: "Ses Düzeyi",
-            play: "Oynat",
-            playbackRates: "Oynatma Hızı",
-            close: "Kapat",
-            auto: "Otomatik",
-            quality: "Kalite",
-          },
-
-          image: "",
-          title: "",
-        });
-
-        jwplayer("vidd").on("complete", () => {
-          ipcRenderer.send("nextEpisode", true);
-        });
-
-
-
-        jwplayer("vidd").once("play", function () {
-          let cookieData = localStorage.getItem("data_" + identifier);
-          if (!cookieData) {
-            return;
-          }
-          const [resumeAt, duration] = cookieData.split(":");
-          console.log("LAST-RESUME", resumeAt);
-
-          jwplayer("vidd").seek(resumeAt);
-        });
-
-        jwplayer("vidd").on("play", function () {
-          isPlaying = true;
-
-          ipcRenderer.send("playPause", isPlaying);
-        });
-
-        jwplayer("vidd").on("pause", function (event) {
-          isPlaying = false;
-
-          ipcRenderer.send("playPause", isPlaying, event.pauseReason);
-        });
-
-        jwplayer("vidd").on("time", function (e) {
-          localStorage.setItem(
-            "data_" + identifier,
-            `${Math.floor(e.position)}:${jwplayer("vidd").getDuration()}`
-          );
-          console.log(
-            "LAST",
-            identifier,
-            `${Math.floor(e.position)}:${jwplayer("vidd").getDuration()}`
-          );
-          ipcRenderer.send("time", parseInt(e.position * 1000), isPlaying);
-          if (e.position > jumpFrom && e.position < jumpTo) {
-            //document.getElementById("vidd").removeChild(skip)
-            skip = document.createElement("button");
-            skip.className = "skip";
-            skip.id = skip;
-            skip.innerHTML = "İntroyu Atla";
-            skip.addEventListener("click", () => {
-              jwplayer("vidd").seek(jumpTo);
-            });
-            document.getElementById("vidd").appendChild(skip);
-
-            skip.style.display = "block";
-          } else {
-            var skips = document.querySelectorAll(".skip");
-            for (var i = 0; i < skips.length; i++) {
-              skips[i].style.display = "none";
-              document.getElementById("vidd").removeChild(skips[i]);
-            }
-            skip.style.display = "none";
-          }
-        });
-
-        window.addEventListener(
-          "message",
-          (event) => {
-            const data = event.data;
-            if (data.action == "changeSub") {
-              const index = data.index;
-              selectSub(index);
-              //jwplayer("vidd").setCurrentCaptions(index);
-            }
-          },
-          false
-        );
-
-        if (captions && captions.length > 0) {
-          selectSub(
-            captions.findIndex((item) => {
-              return (
-                item.language ==
-                (localStorage.getItem("prefered_language") || "tr")
-              );
-            }) + 1 || 1
-          );
+      ipcRenderer.on("Sources", (event, sources2) => {
+        sources = sources2;
+        ipcRenderer.send("canDownloadSources", sources2);
+        document.querySelector("video").innerHTML = "";
+        for (let source of sources) {
+          const el = document.createElement("source");
+          el.type = "video/mp4";
+          el.setAttribute("size", source.label.replace("p", ""));
+          el.src = source.file;
+          document.querySelector("#vidd").appendChild(el);
         }
 
-        function selectSub(index) {
-          if (index == 0) {
-            if (ass != null) {
-              ass.hide();
-              ass.destroy();
-            }
-          } else {
-            fetch(captions[index - 1].url)
-              .then((res) => res.text())
-              .then((text) => {
-                ass = new ASS(text, document.querySelector("video"));
-                ass.show();
-                window.parent.postMessage(
-                  {
-                    action: "captionsChanged",
-                    track: index,
-                  },
-                  "https://animecix.net/"
-                );
-                localStorage.setItem(
-                  "prefered_language",
-                  captions[index - 1].language
-                );
-                setInterval(() => {
-                  document.querySelector("video").style.position = "fixed";
-                  document.querySelector("video").style.width = "100%";
-                  document.querySelector("video").style.height = "100%";
-                  if (ass != null) {
-                    ass.resize();
-                  }
-                }, 1000);
-              });
-          }
-        }
+        setupPlayer();
       });
 
       ipcRenderer.on("time", (event, time, play) => {
         console.log("Time Called");
-        const pos = jwplayer("vidd").getPosition() * 1000;
+        const pos = player.currentTime * 1000;
         if (Math.abs(time - pos) > 5000) {
-          jwplayer("vidd").seek(time / 1000);
+          player.currentTime = time / 1000;
         }
         if (play) {
-          jwplayer("vidd").play();
+          player.play();
         } else {
-          jwplayer("vidd").pause();
+          player.pause();
         }
       });
 
       ipcRenderer.on("playPause", (event, play) => {
         if (play) {
-          jwplayer("vidd").play();
+          player.play();
         } else {
-          jwplayer("vidd").pause();
+          player.pause();
         }
       });
 
@@ -250,6 +200,229 @@
             jumpFrom = response.from / 1000;
           });
       });
+
+      function selectSub(index) {
+        if (index == 0) {
+          if (ass != null) {
+            ass.hide();
+            ass.destroy();
+          }
+        } else {
+          fetch(captions[index - 1].url)
+            .then((res) => res.text())
+            .then((text) => {
+              ass = new ASS(text, document.querySelector("video"));
+              ass.show();
+              window.parent.postMessage(
+                {
+                  action: "captionsChanged",
+                  track: index,
+                },
+                "https://animecix.net/"
+              );
+              localStorage.setItem(
+                "prefered_language",
+                captions[index - 1].language
+              );
+              setInterval(() => {
+                document.querySelector("video").style.position = "fixed";
+                document.querySelector("video").style.width = "100%";
+                document.querySelector("video").style.height = "100%";
+                if (ass != null) {
+                  ass.resize();
+                }
+              }, 1000);
+            });
+        }
+      }
+
+      function setupPlayer() {
+        if (document.querySelector("source")) {
+          const qualities =
+            sources.map((url) => parseInt(url.label.replace("p", ""))) || [];
+
+          player = new Plyr("#vidd", {
+            disableContextMenu: true,
+            autoplay: true,
+            i18n: {
+              quality: "Kalite",
+              speed: "Hız",
+            },
+          });
+
+          window.addEventListener(
+            "message",
+            (event) => {
+              const data = event.data;
+              if (data.action == "seek") {
+                if (player) {
+                  player.currentTime = data.time;
+                }
+              } else if (data.action == "play") {
+                if (this.player) {
+                  this.player.play();
+                }
+              } else if (data.action == "pause") {
+                if (player) {
+                  player.pause();
+                }
+              } else if (data.action == "toggle") {
+                if (player) {
+                  player.togglePlay();
+                }
+              } else if (data.action == "fullscreenToggle") {
+                if (player) {
+                  player.fullscreen.toggle();
+                }
+              } else if (data.action == "fullscreenEnter") {
+                if (player) {
+                  player.fullscreen.enter();
+                }
+              } else if (data.action == "fullscreenExit") {
+                if (player) {
+                  player.fullscreen.exit();
+                }
+              }
+            },
+            false
+          );
+
+          setTimeout(() => {
+            window.parent.postMessage(
+              {
+                action: "currentTime",
+                time: player.currentTime,
+              },
+              "https://animecix.net/"
+            );
+          }, 1000);
+
+          var first = true;
+          player.on("canplay", (event) => {
+            if (first) {
+              try {
+                is.player?.play();
+              } catch (e) {}
+              let cookieData = localStorage.getItem("data_" + identifier);
+
+              if (cookieData) {
+                try {
+                  const [resumeAt, duration] = cookieData.split(":");
+                  player.currentTime = parseFloat(resumeAt);
+                  console.log("Works,", player.currentTime, resumeAt);
+                } catch (e) {}
+              }
+              first = false;
+            }
+
+            window.parent.postMessage(
+              {
+                action: "canPlay",
+              },
+              "https://animecix.net/"
+            );
+            document.querySelector("video").style.display = "block";
+            document.querySelector(".loading").style.display = "none";
+          });
+
+          player.on("progress", (event) => {});
+
+          player.on("ended", () => {
+            ipcRenderer.send("nextEpisode", true);
+          });
+
+          player.on("canplay", () => {
+            player.play();
+          });
+
+          var isPlaying = false;
+          player.on("play", function () {
+            isPlaying = true;
+
+            ipcRenderer.send("playPause", isPlaying);
+          });
+
+          player.on("pause", function (event) {
+            isPlaying = false;
+
+            ipcRenderer.send("playPause", isPlaying, event.pauseReason);
+          });
+
+          player.on("timeupdate", function (e) {
+            if (!first) {
+              localStorage.setItem(
+                "data_" + identifier,
+                `${Math.floor(player.currentTime)}:${player.currentTime}`
+              );
+            }
+            console.log(
+              "LAST",
+              identifier,
+              `${Math.floor(player.currentTime)}:${player.currentTime}`
+            );
+            ipcRenderer.send(
+              "time",
+              parseInt(player.currentTime * 1000),
+              isPlaying
+            );
+            if (player.currentTime > jumpFrom && player.currentTime < jumpTo) {
+              //document.getElementById("vidd").removeChild(skip)
+              if (skip == null) {
+                skip = document.createElement("button");
+              }
+              skip.className = "skip";
+              skip.id = skip;
+              skip.innerHTML = "İntroyu Atla";
+              skip.addEventListener("click", () => {
+                player.currentTime = jumpTo;
+                skip.style.display = "none";
+              });
+              document.querySelector(".plyr").appendChild(skip);
+
+              skip.style.display = "block";
+            } else {
+              var skips = document.querySelectorAll(".skip");
+              for (var i = 0; i < skips.length; i++) {
+                skips[i].style.display = "none";
+                document.querySelector(".plyr").removeChild(skips[i]);
+              }
+              if (skip) {
+                skip.style.display = "none";
+              }
+            }
+          });
+
+          window.addEventListener(
+            "message",
+            (event) => {
+              const data = event.data;
+              if (data.action == "changeSub") {
+                const index = data.index;
+                selectSub(index);
+              }
+            },
+            false
+          );
+
+          if (captions && captions.length > 0) {
+            selectSub(
+              captions.findIndex((item) => {
+                return (
+                  item.language ==
+                  (localStorage.getItem("prefered_language") || "tr")
+                );
+              }) + 1 || 1
+            );
+          }
+
+          document.querySelector("#vidd").style.width =
+            window.innerWidth + "px";
+          document.querySelector("#vidd").style.height =
+            window.innerHeight + "px";
+        } else {
+          setTimeout(setupPlayer, 1);
+        }
+      }
 
       if (window.location.href.includes("#odnok")) {
         ipcRenderer.send("Odnok", true);
