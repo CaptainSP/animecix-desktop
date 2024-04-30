@@ -1,3 +1,4 @@
+import { session } from "electron";
 import { autoUpdater, ProgressInfo, UpdateInfo } from "electron-updater";
 import { WindowController } from "./controllers/window-controller";
 import { NotificationHelper } from "./helpers/notification-helper";
@@ -8,8 +9,13 @@ export class Updater {
   public execute() {
     autoUpdater.checkForUpdates();
 
-    autoUpdater.on("update-available", (info: UpdateInfo) => {
-      
+    autoUpdater.on("update-available", async (info: UpdateInfo) => {
+      try {
+        await session.defaultSession.clearCache();
+        await this.win.webContents?.session.clearCache();
+      } catch (e) {
+        console.error("Failed to clear cache", e);
+      }
       NotificationHelper.createAndShow(
         "AnimeciX Güncelleniyor...",
         "Güncelleme indiriliyor"
@@ -20,7 +26,13 @@ export class Updater {
       );
     });
 
-    autoUpdater.on("update-downloaded", () => {
+    autoUpdater.on("update-downloaded", async () => {
+      try {
+        await session.defaultSession.clearCache();
+        await this.win.webContents?.session.clearCache();
+      } catch (e) {
+        console.error("Failed to clear cache", e);
+      }
       NotificationHelper.createAndShow(
         "AnimeciX Güncelleniyor...",
         "Güncelleme Kuruluyor"

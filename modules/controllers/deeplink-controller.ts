@@ -1,4 +1,4 @@
-import { app } from "electron";
+import { app, dialog } from "electron";
 import { AuthController } from "./auth-controller";
 import { WindowController } from "./window-controller";
 import path from "path";
@@ -21,6 +21,17 @@ export class DeeplinkController {
       } else {
         app.setAsDefaultProtocolClient("animecix");
       }
+
+      app.on("open-url", (event, url) => {
+
+        if (url !== undefined) {
+          if (url.includes("animecix://login")) {
+            this.authController.onLinkReceived(url);
+          } else {
+            win.loadURL(url.replace("animecix://", "https://"));
+          }
+        }
+      });
 
       app.on("second-instance", (event, commandLine, workingDirectory) => {
         // Someone tried to run a second instance, we should focus our window.

@@ -1,4 +1,4 @@
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow, app, Menu, shell } from "electron";
 import path from "path";
 import { Updater } from "./updater";
 import { WindowController } from "./controllers/window-controller";
@@ -16,18 +16,16 @@ export class Main {
   constructor(public dir: any) {}
 
   run() {
-
-    const gotTheLock = app.requestSingleInstanceLock()
+    const gotTheLock = app.requestSingleInstanceLock();
 
     if (!gotTheLock) {
-      app.quit()
+      app.quit();
     } else {
       app.whenReady().then(() => {
-      
         app.setAppUserModelId("AnimeciX");
         const win = new BrowserWindow({
-          show:false,
-          backgroundColor:"#1D1D1D",
+          show: false,
+          backgroundColor: "#1D1D1D",
           webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -42,54 +40,157 @@ export class Main {
         this.win = new WindowController(win);
 
         // Do not show the window if page is not loaded
-        
+
+        this.createMenu();
+
         win.minimize();
-        win.setProgressBar(100)
-        win.on('ready-to-show',()=> {
+        win.setProgressBar(100);
+        win.on("ready-to-show", () => {
           win.maximize();
           win.show();
-          win.setProgressBar(0)
-        })
+          win.setProgressBar(0);
+        });
 
-        win.webContents.openDevTools()
-  
+        //win.webContents.openDevTools()
+
         // Check for updates
         const updater = new Updater(this.win);
         updater.execute();
-  
+
         // Setup the Adblock and rewrite necessary headers
         const requestController = new RequestController(this.win);
         requestController.execute();
-  
+
         // Setup download controller
         const downloadController = new DownloadController(this.win);
         downloadController.execute();
-  
+
         const siteMenuController = new SiteMenuController(this.win);
         siteMenuController.execute();
-  
+
         const playerController = new PlayerController(this.win);
         playerController.execute();
-  
+
         // Discord RPC
         const rpcController = new RpcController(this.win);
         rpcController.execute();
-  
+
         // Register Auth Controller
         const authController = new AuthController(this.win);
-  
-  
+
         const deeplinkController = new DeeplinkController(
           this.win,
           authController
         );
         deeplinkController.execute();
 
-      
-  
         win.loadURL(process.env.APP_URL as string);
       });
     }
+  }
+  createMenu() {
+    const isMac = process.platform === "darwin";
 
+    const template = [
+      // { role: 'appMenu' }
+      ...(isMac
+        ? [
+            {
+              label: app.name,
+              submenu: [
+                { role: "about" },
+                { type: "separator" },
+                { role: "services" },
+                { type: "separator" },
+                { role: "hide" },
+                { role: "hideOthers" },
+                { role: "unhide" },
+                { type: "separator" },
+                { role: "quit" },
+              ],
+            },
+          ]
+        : []),
+      // { role: 'fileMenu' }
+      {
+        label: "Uygulama",
+        submenu: [isMac ? { role: "close" } : { role: "quit" }],
+      },
+      // { role: 'editMenu' }
+      {
+        label: "Düzenle",
+        submenu: [
+          { role: "undo" },
+          { role: "redo" },
+          { type: "separator" },
+          { role: "cut" },
+          { role: "copy" },
+          { role: "paste" },
+          ...(isMac
+            ? [
+                { role: "pasteAndMatchStyle" },
+                { role: "delete" },
+                { role: "selectAll" },
+                { type: "separator" },
+                {
+                  label: "Speech",
+                  submenu: [
+                    { role: "startSpeaking" },
+                    { role: "stopSpeaking" },
+                  ],
+                },
+              ]
+            : [
+                { role: "delete" },
+                { type: "separator" },
+                { role: "selectAll" },
+              ]),
+        ],
+      },
+      // { role: 'viewMenu' }
+      {
+        label: "Görüntü",
+        submenu: [
+          { role: "reload" },
+          { role: "forceReload" },
+          { type: "separator" },
+          { role: "resetZoom" },
+          { role: "zoomIn" },
+          { role: "zoomOut" },
+          { type: "separator" },
+          { role: "togglefullscreen" },
+        ],
+      },
+      // { role: 'windowMenu' }
+      {
+        label: "Pencere",
+        submenu: [
+          { role: "minimize" },
+          { role: "zoom" },
+          ...(isMac
+            ? [
+                { type: "separator" },
+                { role: "front" },
+                { type: "separator" },
+                { role: "window" },
+              ]
+            : [{ role: "close" }]),
+        ],
+      },
+      {
+        role: "help",
+        submenu: [
+          {
+            label: "İletişim",
+            click: async () => {
+              await shell.openExternal("https://animecix.net/contact");
+            },
+          },
+        ],
+      },
+    ];
+
+    const menu = Menu.buildFromTemplate(template as any);
+    Menu.setApplicationMenu(menu);
   }
 }

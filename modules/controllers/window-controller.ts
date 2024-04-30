@@ -45,6 +45,8 @@ export class WindowController {
     this.listenFullScreen();
     this.registerDeepLinks();
     this.setOpenHandler();
+
+   //this.win?.webContents.openDevTools()
   }
 
   // Register deep links (animecix://) for the app.
