@@ -42,7 +42,9 @@ export class DeeplinkController {
           if (url.includes("animecix://login")) {
             this.authController.onLinkReceived(url);
           } else {
-            win.loadURL(url.replace("animecix://", "https://"));
+            const urll = new URL(process.env.APP_URL as string);
+            urll.pathname = url.replace("animecix://", "");
+            win.loadURL(urll.href);
           }
         }
         if (win.isMinimized()) win.restore();
