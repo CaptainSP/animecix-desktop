@@ -18,7 +18,7 @@ export class RpcController {
       !ready ||
       JSON.stringify(this.rpcData) == "{}" ||
       this.win?.db.get("discordRPC") !== true ||
-      this.win.win?.isVisible()
+      !this.win.win?.isVisible()
     )
       return rpc.clearActivity();
     rpc.setActivity(this.rpcData);
@@ -28,7 +28,7 @@ export class RpcController {
       if (
         !ready ||
         this.win?.db.get("discordRPC") !== true ||
-        this.win.win?.isVisible()
+        !this.win.win?.isVisible()
       )
         return rpc.clearActivity();
       this.updateActivity();
