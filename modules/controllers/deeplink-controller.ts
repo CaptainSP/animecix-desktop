@@ -23,18 +23,23 @@ export class DeeplinkController {
       }
 
       app.on("open-url", (event, url) => {
-
+        event.preventDefault();
         if (url !== undefined) {
           if (url.includes("animecix://login")) {
             this.authController.onLinkReceived(url);
           } else {
-            win.loadURL(url.replace("animecix://", "https://"));
+            const urll = new URL(process.env.APP_URL as string);
+            urll.pathname = url.replace("animecix://", "");
+            win.loadURL(urll.href);
           }
+          if (!win.isVisible()) win.show();
+          if (win.isMinimized()) win.restore();
+          win.focus();
         }
       });
 
       app.on("second-instance", (event, commandLine, workingDirectory) => {
-        // Someone tried to run a second instance, we should focus our window.
+        event.preventDefault();
         let url = commandLine.find((item) => {
           return item.includes("animecix://");
         });
@@ -42,9 +47,12 @@ export class DeeplinkController {
           if (url.includes("animecix://login")) {
             this.authController.onLinkReceived(url);
           } else {
-            win.loadURL(url.replace("animecix://", "https://"));
+            const urll = new URL(process.env.APP_URL as string);
+            urll.pathname = url.replace("animecix://", "");
+            win.loadURL(urll.href);
           }
         }
+        if (!win.isVisible()) win.show();
         if (win.isMinimized()) win.restore();
         win.focus();
       });

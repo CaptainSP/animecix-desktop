@@ -326,7 +326,11 @@ function onButtonClick() {
             <input type="checkbox" id="checkbox2"> Discord RPC
           </label><br>    <label>
             <input type="checkbox" id="checkbox3"> Otomatik atlama
-          </label>
+          </label><br> <label>
+            <input type="checkbox" id="checkbox4"> Sistem başlangıcı
+          </label><br>  <label for="myInput">Bildirilecek animelerin id'si (, ile ayırın)</label>
+<textarea id="myInput" name="Bildirilecek animeler" style="overflow:hidden;resize:both; width:300px; height:100px;"></textarea>
+
         </div>
       `,
       showCancelButton: true,
@@ -338,12 +342,16 @@ function onButtonClick() {
         document.getElementById("checkbox1").checked = isDarkMode;
         document.getElementById("checkbox2").checked = !!data.discordRPC;
         document.getElementById("checkbox3").checked = !!data.autoSkip;
+        document.getElementById("checkbox4").checked = !!data.autoLaunch;
+        document.getElementById("myInput").value = (data.notifyIDs ?? []).join(",");
       },
       preConfirm: () => {
         return {
           checkbox1: !!document.getElementById("checkbox1")?.checked,
           checkbox2: !!document.getElementById("checkbox2")?.checked,
           checkbox3: !!document.getElementById("checkbox3")?.checked,
+          checkbox4: !!document.getElementById("checkbox4")?.checked,
+          input1:   document.getElementById("myInput").value
         };
       },
     }).then((result) => {
@@ -368,6 +376,13 @@ function onButtonClick() {
         }
         if (result.value.checkbox3 == !data.autoSkip) {
           renderer.send("settingsSet", "autoSkip", result.value.checkbox3);
+        }
+        
+        if (result.value.checkbox4 == !data.autoLaunch) {
+          renderer.send("toggleAutoLaunch");
+        }
+        if (result.value.input1.split(",") !== (data.notifyIDs ?? [])) {
+          renderer.send("settingsSet","notifyIDs",result.value.input1.split(",") );
         }
       }
     });

@@ -15,10 +15,11 @@ export class SettingsControlller {
     return this.db.fetchAll();
   }
   public execute() {
-    ipcMain.on("settingsGet", (event, ok) => {
+    ipcMain.on("settingsGet", async (event, ok) => {
       console.log("get Event");
       console.log(this.db.file)
-      const data = this.getData();
+      let data = this.getData();
+      data.autoLaunch = await this.win.autoLauncher?.isEnabled();
       if (this.win != null) {
         this.win.webContents?.mainFrame.frames.forEach((frame) => {
           frame.send("settingsDetails", data);
@@ -29,6 +30,11 @@ export class SettingsControlller {
     ipcMain.on("settingsSet", (event, namve, value) => {
       if(!value) return this.db.remove(namve);
       this.db.set(namve, value);
+    });
+    ipcMain.on("toggleAutoLaunch", async (event, namve, value) => {
+    if(await this.win.autoLauncher?.isEnabled()) {
+      await this.win.autoLauncher?.disable()
+    } else await this.win.autoLauncher?.enable()
     });
   }
 }

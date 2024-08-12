@@ -1,6 +1,9 @@
 export interface settings {
   discordRPC?: boolean;
-  autoSkip?:boolean
+  autoSkip?: boolean;
+  notifier?: any;
+  autoLaunch?: any;
+  notifyIDs?: number[];
 }
 const fs = require("fs"); //fs safeload- provided
 const load = (file: string): settings =>
@@ -33,7 +36,7 @@ export class Database {
       }
     }
   }
-  set(data: "discordRPC", value: boolean) {
+  set(data: "discordRPC" | "notifier" | "notifyIDs", value: boolean | any) {
     if (!data) throw Error("[err] no data to set");
     if (!value) throw Error("[err] no value to set");
     let fileData = load(this.file);
@@ -41,7 +44,7 @@ export class Database {
     write(this.file, fileData);
     return;
   } //€€₺€ißæ err, set for ❤
-  remove(data: "discordRPC") {
+  remove(data: "discordRPC" | "notifier" | "notifyIDs") {
     if (!data) throw Error("[err] no value to remove");
     let fileData = load(this.file);
     if (!fileData[data])
@@ -57,7 +60,7 @@ export class Database {
 
   //Code obsidestructor ⚔
 
-  has(data: "discordRPC") {
+  has(data: "discordRPC" | "notifier" | "notifyIDs") {
     if (!data) throw Error("[err] No data to has function");
     let fileData = load(this.file);
     if (!fileData[data]) return false;
@@ -93,14 +96,14 @@ please credit us.
     return;
   }
 
-  fetch(data: "discordRPC") {
+  fetch(data: "discordRPC" | "notifier" | "notifyIDs") {
     if (!data) throw Error("[err] No data to fetch");
     let fileData = load(this.file);
     if (!fileData[data]) fileData[data] = undefined;
     return fileData[data];
   }
 
-  get(data: "discordRPC") {
+  get(data: "discordRPC" | "notifier" | "notifyIDs") {
     if (!data) throw Error("[err] No data to get");
     let fileData = load(this.file);
     if (!fileData[data]) fileData[data] = undefined;

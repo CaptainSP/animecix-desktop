@@ -9,17 +9,28 @@ const rpc = new DiscordRPC.Client({ transport: "ipc" });
 rpc.on("ready", () => {
   ready = true;
 });
-rpc.login({ clientId });
+rpc.login({ clientId }).catch(() => {});
 export class RpcController {
   private rpcData: DiscordRPC.Presence = {};
   constructor(private win: WindowController) {}
   private updateActivity() {
-    if (JSON.stringify(this.rpcData) == "{}") return rpc.clearActivity();
+    if (
+      !ready ||
+      JSON.stringify(this.rpcData) == "{}" ||
+      this.win?.db.get("discordRPC") !== true ||
+      this.win.win?.isVisible()
+    )
+      return rpc.clearActivity();
     rpc.setActivity(this.rpcData);
   }
   public execute() {
     setInterval(() => {
-      if (!ready || this.win?.db.get("discordRPC") !== true) return  rpc.clearActivity();
+      if (
+        !ready ||
+        this.win?.db.get("discordRPC") !== true ||
+        this.win.win?.isVisible()
+      )
+        return rpc.clearActivity();
       this.updateActivity();
     }, 15e3);
     ipcMain.on("rpc-href", (event, href) => {
@@ -85,7 +96,7 @@ export class RpcController {
       }
     });
     ipcMain.on("discord-rpc", (event, data) => {
-      if (this.win?.db.get("discordRPC") !== true) return  rpc.clearActivity();
+      if (this.win?.db.get("discordRPC") !== true) return rpc.clearActivity();
 
       this.rpcData = {
         state: data.state == "" ? "Movie" : data.state,
@@ -96,7 +107,7 @@ export class RpcController {
     });
 
     ipcMain.on("discord-rpc-destroy", (event, data) => {
-      if (this.win?.db.get("discordRPC") !== true) return  rpc.clearActivity();
+      if (this.win?.db.get("discordRPC") !== true) return rpc.clearActivity();
       this.rpcData = {
         startTimestamp: new Date(),
         largeImageKey: "animecix-logo",

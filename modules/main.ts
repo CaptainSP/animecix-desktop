@@ -1,4 +1,4 @@
-import { BrowserWindow, app, Menu, shell } from "electron";
+import { BrowserWindow, app, Menu, shell, Tray, Notification } from "electron";
 import path from "path";
 import { Updater } from "./updater";
 import { WindowController } from "./controllers/window-controller";
@@ -10,10 +10,21 @@ import { RpcController } from "./controllers/rpc-controller";
 import { AuthController } from "./controllers/auth-controller";
 import { DeeplinkController } from "./controllers/deeplink-controller";
 import { SettingsControlller } from "./controllers/settings-controller";
+import fetch from "node-fetch";
+import os from "os";
+import { existsSync, mkdirSync } from "fs";
+import { downloadImage } from "./helpers/url-helper";
 
+interface animeData {
+  poster: string;
+  title: string;
+  titleId: number;
+  seasonNumber: number;
+  episode_number: number;
+}
 export class Main {
   win: WindowController | null = null;
-
+  tray: any;
   constructor(public dir: any) {}
 
   run() {
@@ -23,6 +34,16 @@ export class Main {
       app.quit();
     } else {
       app.whenReady().then(() => {
+        this.tray = new Tray(path.join(this.dir, "files", "icon.png"));
+        this.tray.setToolTip("AnimeciX");
+        this.setContext();
+        this.tray.on("click", () => {
+          if (this.win?.win?.isVisible()) {
+            this.win?.win?.hide();
+          } else {
+            this.win?.win?.show();
+          }
+        });
         app.setAppUserModelId("AnimeciX");
         const win = new BrowserWindow({
           show: false,
@@ -39,25 +60,31 @@ export class Main {
           frame: false,
         });
         this.win = new WindowController(win);
-
-        // Do not show the window if page is not loaded
-
         this.createMenu();
+        let did_open = false;
 
-        win.minimize();
-        win.setProgressBar(100);
-        win.on("ready-to-show", () => {
-          win.maximize();
-          win.show();
-          win.setProgressBar(0);
-        });
+        if (!process.argv.includes("notify")) {
+          win.minimize();
+          win.setProgressBar(100);
+          win.on("ready-to-show", () => {
+            open();
+          });
 
-      //win.webContents.openDevTools()
-      
-        const updater = new Updater(this.win);
-        // Check for updates
-        updater.execute();
+          //  win.webContents.openDevTools()
 
+          const updater = new Updater(this.win);
+          // Check for updates
+          updater.execute();
+        } else {
+        }
+        function open() {
+          if (!did_open) {
+            did_open = true;
+            win.maximize();
+            win.show();
+            win.setProgressBar(0);
+          }
+        }
         // Setup the Adblock and rewrite necessary headers
         const requestController = new RequestController(this.win);
         requestController.execute();
@@ -68,12 +95,18 @@ export class Main {
 
         const siteMenuController = new SiteMenuController(this.win);
         siteMenuController.execute();
-
         const playerController = new PlayerController(this.win);
         playerController.execute();
         const settings = new SettingsControlller(this.win);
-        settings.execute()
+        settings.execute();
         this.win.db = settings.db;
+
+        this.check();
+        this.win?.intervals.push(
+          setInterval(() => {
+            this.check();
+          }, 15 * 60 * 1000)
+        );
         // Discord RPC
         const rpcController = new RpcController(this.win);
         rpcController.execute();
@@ -86,10 +119,189 @@ export class Main {
           authController
         );
         deeplinkController.execute();
-
-        win.loadURL(process.env.APP_URL as string);
+        let url = process.argv.slice(1).find((item) => {
+          return item.includes("animecix://");
+        });
+        if (url !== undefined) {
+          if (url.includes("animecix://login")) {
+            authController.onLinkReceived(url);
+          } else {
+            const urll = new URL(process.env.APP_URL as string);
+            urll.pathname = url.replace("animecix://", "");
+            win.loadURL(urll.href);
+          }
+        } else {
+          win.loadURL(process.env.APP_URL as string);
+        }
       });
     }
+  }
+  async check() {
+    let veri = (await this.win?.db.fetchAll()) ?? {};
+    let data = veri.notifier ?? {};
+    if (!data?.animeData) data.animeData = [];
+    const shouldNotFetchData =
+      data.lastCheck !== null &&
+      15 * 60 * 1000 - (Date.now() - data.lastCheck) > 0;
+    if (!shouldNotFetchData) {
+      try {
+        const d = this.fetchData().then((d) => {
+          const requiredAnimes = d.data
+            .filter((x: { title_id: number }) =>
+            (veri.notifyIDs ?? []).map(x=>parseInt(`${x}`))?.includes(x.title_id)
+            )
+            .map(
+              (x: {
+                title_poster: any;
+                title_id: any;
+                season_number: any;
+                episode_number: any;
+                title_name: any;
+              }) => {
+                return {
+                  poster: x.title_poster,
+                  title: x.title_name,
+                  titleId: x.title_id,
+                  seasonNumber: x.season_number,
+                  episode_number: x.episode_number,
+                };
+              }
+            );
+          this.checkForNewEpisodes(requiredAnimes);
+        });
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    }
+  }
+  async checkForNewEpisodes(newData: animeData[]) {
+    const storedData = await this.win?.db?.get("notifier");
+    const storedEpisodes: animeData[] = storedData?.animeData || [];
+
+    const newEpisodes = newData.filter(
+      (newEpisode) =>
+        !storedEpisodes.some(
+          (storedEpisode) =>
+            storedEpisode.titleId === newEpisode.titleId &&
+            storedEpisode.seasonNumber === newEpisode.seasonNumber &&
+            storedEpisode.episode_number === newEpisode.episode_number
+        )
+    );
+
+    if (newEpisodes.length > 0) {
+      for (let episode of newEpisodes) {
+        await new Promise<void>(async (a) => {
+          try {
+            let tempdir = path.join(os.tmpdir(), "animecix");
+            if (!existsSync(tempdir)) mkdirSync(tempdir);
+            let filePath = path.join(tempdir, `${episode.titleId}.png`);
+            if (!existsSync(filePath) && episode.poster)
+              await downloadImage(episode.poster, filePath);
+
+            const notification = new Notification({
+              icon:
+                filePath ??
+                path.join(process.env.dir as string, "files", "icon.png"),
+              title: "Yeni bölüm",
+              timeoutType: "default",
+              body: `${
+                episode.title.length > 15
+                  ? `${episode.title.slice(0, 15)}...`
+                  : episode.title
+              }\n${
+                (episode.seasonNumber ?? 0) > 1
+                  ? `${episode.seasonNumber ?? 0}. Sezon `
+                  : ""
+              }${episode.episode_number}. Bölüm`,
+
+              actions: [
+                {
+                  type: "button",
+                  text: "İzle",
+                },
+              ],
+              closeButtonText: "Kapat",
+            });
+            setTimeout(() => {
+              notification.close();
+            }, 10000);
+            notification.show();
+            notification.on("failed", () => a());
+            notification.on("close", () => a());
+            notification.on("click", async () => {
+              await shell.openExternal(
+                `animecix://titles/${episode.titleId}/season/${episode.seasonNumber}/episode/${episode.episode_number}`,
+                { workingDirectory: process.cwd(), activate: true }
+              );
+              a();
+            });
+          } catch (error) {}
+        });
+      }
+
+      this.win?.db?.set("notifier", {
+        lastCheck: Date.now(),
+        animeData: [
+          ...storedEpisodes
+            .filter((x) => !newData.some((y) => x.titleId == y.titleId))
+            .map((x) => {
+              return {
+                titleId: x.titleId,
+                seasonNumber: x.seasonNumber,
+                episode_number: x.episode_number,
+              };
+            }),
+          ...newData.map((x) => {
+            return {
+              titleId: x.titleId,
+              seasonNumber: x.seasonNumber,
+              episode_number: x.episode_number,
+            };
+          }),
+        ],
+      });
+    }
+  }
+  async fetchData() {
+    try {
+      const response = await fetch("https://animecix.net/secure/last-episodes");
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Fetch error:", error);
+      throw error;
+    }
+  }
+
+  setContext() {
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: "Yardım",
+        role: "help",
+        submenu: [
+          {
+            label: "İletişim",
+            click: async () => {
+              await shell.openExternal("https://animecix.net/contact");
+            },
+          },
+          {
+            label: "Discord",
+            click: async () => {
+              await shell.openExternal("https://discord.gg/animecix");
+            },
+          },
+        ],
+      },
+      { type: "separator" },
+      {
+        label: "Çıkış",
+        click: () => {
+          app.quit();
+        },
+      },
+    ]);
+    this.tray?.setContextMenu(contextMenu);
   }
   createMenu() {
     const isMac = process.platform === "darwin";

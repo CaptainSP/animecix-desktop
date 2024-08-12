@@ -9,12 +9,15 @@ import {
 } from "electron";
 import path from "path";
 import { Deeplink } from "electron-deeplink";
-
+import { tmpdir } from "os";
+import { rmSync } from "fs";
+import AutoLaunch from 'auto-launch';
 export class WindowController {
   private isOdnok = false;
   public sources: any[] = [];
   public identifier: any;
   public standart: any;
+  autoLauncher: AutoLaunch | undefined;
 
   public intervals: any[] = [];
   db!: import("c:/Users/User1/Desktop/animecix-desktop/models/database").Database;
@@ -40,6 +43,12 @@ export class WindowController {
   }
 
   constructor(public win: BrowserWindow | null) {
+    this.autoLauncher = new AutoLaunch({
+      name: 'AnimeciX', 
+      path: app.getPath('exe') ,
+      //@ts-ignore
+      args:["notify"]
+    });
     this.setUserAgent();
     this.destoryWhenExit();
     this.listenFullScreen();
@@ -84,12 +93,31 @@ export class WindowController {
   }
 
   destoryWhenExit() {
+    
     ipcMain.on("exit", (event) => {
-      this.win?.close();
-      this.intervals.forEach((element) => {
-        clearInterval(element);
-      });
+      if (this.win?.isVisible()) {
+        this.win?.hide();
+      } else {
+        this.win?.show();
+      }
+      //this.win?.close();
+     
     });
+    app.on("quit",this.exit)
+    app.on("will-quit",this.exit)
+    app.on("before-quit",this.exit)
+  }
+  exit() {
+    this.intervals?.forEach((element) => {
+      clearInterval(element);
+    });
+    const tempdir = path.join(tmpdir(), "animecix");
+    try {
+      rmSync(tempdir, { recursive: true, force: true });
+      console.log(`Klasör başarıyla silindi: ${tempdir}`);
+    } catch (error) {
+      console.error(`Klasör silinirken bir hata oluştu: ${error}`);
+    }
   }
 
   public currentFrameUrl: string | null = null;
