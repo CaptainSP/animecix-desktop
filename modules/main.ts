@@ -9,6 +9,7 @@ import { RequestController } from "./controllers/request-controller";
 import { RpcController } from "./controllers/rpc-controller";
 import { AuthController } from "./controllers/auth-controller";
 import { DeeplinkController } from "./controllers/deeplink-controller";
+import { SettingsControlller } from "./controllers/settings-controller";
 
 export class Main {
   win: WindowController | null = null;
@@ -51,10 +52,10 @@ export class Main {
           win.setProgressBar(0);
         });
 
-        //win.webContents.openDevTools()
-
-        // Check for updates
+      //win.webContents.openDevTools()
+      
         const updater = new Updater(this.win);
+        // Check for updates
         updater.execute();
 
         // Setup the Adblock and rewrite necessary headers
@@ -70,7 +71,9 @@ export class Main {
 
         const playerController = new PlayerController(this.win);
         playerController.execute();
-
+        const settings = new SettingsControlller(this.win);
+        settings.execute()
+        this.win.db = settings.db;
         // Discord RPC
         const rpcController = new RpcController(this.win);
         rpcController.execute();

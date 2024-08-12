@@ -14,7 +14,6 @@
     "deployMac": "electron-builder build --mac --publish always",
     "deployDeb": "electron-builder build --linux deb --publish always",
     "deployAppImage": "electron-builder build --win --mac --linux AppImage --x64 --arm64 --publish always",
-
     "deploy32": "electron-builder build --win --ia32 --publish always"
   },
   "author": {
@@ -25,14 +24,16 @@
   "license": "GPL",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CaptainSP/animecix-desktop.git"
+    "url": "https://github.com/uwuv3/animecix-desktop.git"
   },
   "dependencies": {
-    "@cliqz/adblocker-electron": "^1.22.2",
+    "@cliqz/adblocker-electron": "^1.27.1",
     "axios": "^0.21.1",
-    "discord-rich-presence": "^0.0.8",
+    "discord-rpc": "^4.0.1",
+    "electron-db": "^0.15.7",
     "electron-deeplink": "^1.0.10",
     "electron-updater": "^4.3.9",
+    "fs": "^0.0.1-security",
     "node-downloader-helper": "^1.0.18",
     "node-fetch": "^2.6.1",
     "node-gyp": "^9.0.0",
@@ -41,6 +42,7 @@
     "streamsaver": "^2.0.5"
   },
   "devDependencies": {
+    "@types/discord-rpc": "^4.0.8",
     "@types/electron": "^1.6.10",
     "@types/node-fetch": "^3.0.3",
     "electron": "^13.1.6",

@@ -2,4 +2,8 @@ electron-builder.yml
 dist
 node_modules
 package-lock.json
+
 *.js
+!files/*
+!files/videos/*
+settings.json

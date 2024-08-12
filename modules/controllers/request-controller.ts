@@ -44,7 +44,6 @@ export class RequestController {
           details.requestHeaders["Referer"] = this.win.currentFrameUrl;
         }
 
-
         details.requestHeaders["User-Agent"] =
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0";
 
@@ -86,22 +85,34 @@ export class RequestController {
     session.defaultSession.webRequest.onHeadersReceived(
       this.filter,
       (details, callback) => {
-        if (details.url.includes("/file/tau-video")) {
-       
+        try {
+          if (details.url.includes("/file/tau-video")) {
+            if (
+              details.responseHeaders &&
+              !details.responseHeaders["Content-Range"] &&
+              details.statusCode == 200
+            ) {
+              console.log(details.responseHeaders["content-length"]);
+              details.responseHeaders["Content-Range"] = [
+                "bytes 0-" +
+                  (parseInt(details.responseHeaders["content-length"][0]) - 1) +
+                  "/" +
+                  details.responseHeaders["content-length"][0],
+              ];
+            }
 
-          if (details.responseHeaders && !details.responseHeaders['Content-Range'] && details.statusCode == 200) {
-            console.log(details.responseHeaders['content-length'])
-            details.responseHeaders['Content-Range'] = ["bytes 0-" + (parseInt(details.responseHeaders['content-length'][0])-1) + "/" + details.responseHeaders['content-length'][0]]
+            details.statusCode = 206;
+
+            console.log("Status Code:", details.statusCode);
+            callback({
+              statusLine: "HTTP/1.1 206",
+              responseHeaders: details.responseHeaders,
+            });
+          } else {
+            callback({});
           }
-
-          details.statusCode = 206
-          
-          console.log('Status Code:',details.statusCode)
-          callback({
-            statusLine: "HTTP/1.1 206",
-            responseHeaders:details.responseHeaders
-          });
-        } else {
+        } catch (e) {
+          console.error(e);
           callback({});
         }
       }

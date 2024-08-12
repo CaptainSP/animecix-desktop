@@ -17,7 +17,7 @@ export class WindowController {
   public standart: any;
 
   public intervals: any[] = [];
-
+  db!: import("c:/Users/User1/Desktop/animecix-desktop/models/database").Database;
   public get webContents(): WebContents | undefined {
     return this.win?.webContents;
   }
@@ -46,7 +46,7 @@ export class WindowController {
     this.registerDeepLinks();
     this.setOpenHandler();
 
-   //this.win?.webContents.openDevTools()
+  // this.win?.webContents.openDevTools()
   }
 
   // Register deep links (animecix://) for the app.
