@@ -1,6 +1,6 @@
 {
   "name": "animecix",
-  "version": "1.2.5",
+  "version": "1.2.7",
   "description": "AnimeciX Desktop App",
   "main": "main.js",
   "scripts": {
@@ -14,7 +14,6 @@
     "deployMac": "electron-builder build --mac --publish always",
     "deployDeb": "electron-builder build --linux deb --publish always",
     "deployAppImage": "electron-builder build --win --mac --linux AppImage --x64 --arm64 --publish always",
-
     "deploy32": "electron-builder build --win --ia32 --publish always"
   },
   "author": {

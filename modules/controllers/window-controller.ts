@@ -46,7 +46,7 @@ export class WindowController {
     this.registerDeepLinks();
     this.setOpenHandler();
 
-   //this.win?.webContents.openDevTools()
+    this.win?.webContents.openDevTools();
   }
 
   // Register deep links (animecix://) for the app.
@@ -134,11 +134,11 @@ export class WindowController {
 
   public setOpenHandler() {
     if (this.win != null) {
-      ipcMain.on("openLink", (event, link:string) => {
-        if (!link.startsWith('http')) {
-          link = process.env.APP_URL + '/' + link
+      ipcMain.on("openLink", (event, link: string) => {
+        if (!link.startsWith("http")) {
+          link = process.env.APP_URL + "/" + link;
         }
-        console.log(link)
+        console.log(link);
         shell.openExternal(link);
       });
 
