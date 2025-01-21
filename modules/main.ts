@@ -31,7 +31,7 @@ export class Main {
             contextIsolation: false,
             nodeIntegrationInSubFrames: true,
             preload: this.dir + "/files/preload.js",
-            nativeWindowOpen: true,
+            
           },
           title: "AnimeciX",
           icon: path.join(this.dir, "files", "icon.png"),

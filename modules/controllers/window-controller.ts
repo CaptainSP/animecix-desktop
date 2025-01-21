@@ -46,7 +46,7 @@ export class WindowController {
     this.registerDeepLinks();
     this.setOpenHandler();
 
-    this.win?.webContents.openDevTools();
+    //this.win?.webContents.openDevTools();
   }
 
   // Register deep links (animecix://) for the app.
@@ -142,11 +142,12 @@ export class WindowController {
         shell.openExternal(link);
       });
 
-      this.win.webContents.on("new-window", (e, url) => {
-        if (url.includes("discord.gg")) {
-          e.preventDefault();
-          shell.openExternal(url);
+      this.win.webContents.setWindowOpenHandler((details) => {
+        if (details.url.includes("discord.gg")) {
+          shell.openExternal(details.url);
+          return { action: "deny" };
         }
+        return { action: "allow" };
       });
 
       this.win.webContents.setWindowOpenHandler(({ url }) => {

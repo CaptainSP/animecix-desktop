@@ -42,7 +42,7 @@
   "devDependencies": {
     "@types/electron": "^1.6.10",
     "@types/node-fetch": "^3.0.3",
-    "electron": "^13.1.6",
+    "electron": "^34.0.0",
     "electron-builder": "^23.6.0",
     "typescript": "^4.5.4"
   }
