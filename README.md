@@ -2,6 +2,9 @@
 
 MacOS için Animecix Desktop uygulaması.
 
+![CleanShot 2025-02-03 at 15 00 22](https://github.com/user-attachments/assets/ada79eb5-390c-44cd-adf9-eba26b7e765f)
+
+
 ### 🚨 Bilinen Sorunlar
 - **DiscordRPC**: Entegrasyon devam ediyor (ETA: Belirsiz)
 - **TauVideo Oynatıcı**
