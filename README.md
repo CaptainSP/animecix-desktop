@@ -48,7 +48,7 @@ npm install
 komutunu çalıştırın.
 
 Daha sonrasında
-animecix-mac/node_modules/@cliqz/adblocker-electron/dist/commonjs/preload_path.js
+animecix-mac/node_modules/@ghostery/adblocker-electron/dist/commonjs/preload_path.js
 Dosyasının içindeki "node:path" yazısını "path" ile değiştirin.
 
 (Ya da direkt MacOS için düzenlediğim repoyu kullanın https://github.com/ErenEksen/electron-adblocker-mac-compatible )
