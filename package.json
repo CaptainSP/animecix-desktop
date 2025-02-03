@@ -1,7 +1,7 @@
 {
   "name": "animecix",
-  "version": "1.2.7",
-  "description": "AnimeciX Desktop App",
+  "version": "1.2.8",
+  "description": "AnimeciX MacOS Desktop App",
   "main": "main.js",
   "scripts": {
     "compile": "tsc",
@@ -26,8 +26,17 @@
     "type": "git",
     "url": "https://github.com/CaptainSP/animecix-desktop.git"
   },
+  "build": {
+    "mac": {
+      "icon": "files/icon.icns",
+      "extendInfo": {
+        "CFBundleDisplayName": "Animecix",
+        "CFBundleName": "Animecix"
+      }
+    }
+  },
   "dependencies": {
-    "@cliqz/adblocker-electron": "^1.22.2",
+    "@ghostery/adblocker-electron": "^2.5.0",
     "axios": "^0.21.1",
     "discord-rich-presence": "^0.0.8",
     "electron-deeplink": "^1.0.10",
@@ -44,6 +53,7 @@
     "@types/node-fetch": "^3.0.3",
     "electron": "^13.1.6",
     "electron-builder": "^23.6.0",
+    "patch-package": "^8.0.0",
     "typescript": "^4.5.4"
   }
 }

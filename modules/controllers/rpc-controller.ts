@@ -1,4 +1,4 @@
-import { ipcMain } from "electron";
+/* import { ipcMain } from "electron";
 import { WindowController } from "./window-controller";
 
 export class RpcController {
@@ -26,3 +26,4 @@ export class RpcController {
     });
   }
 }
+*/

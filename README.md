@@ -1,14 +1,20 @@
-# AnimeciX Windows
+# AnimeciX MacOS
 
-[Click Here To see the English version](https://github.com/CaptainSP/animecix-desktop/blob/main/README-en.md)
+MacOS için Animecix Desktop uygulaması.
 
--------
+### 🚨 Bilinen Sorunlar
+- **DiscordRPC**: Entegrasyon devam ediyor (ETA: Belirsiz)
+- **TauVideo Oynatıcı**
+- **Video İndirme** 
+
+---
 
 [animecix.net](https://animecix.net) web sitesinin masaüstü uygulamasıdır.
 
-[Electron](https://www.electronjs.org/)  ile oluşturulmuştur. Typescript ile yazılmıştır.
+[Electron](https://www.electronjs.org/) ile oluşturulmuştur. Typescript ile yazılmıştır.
 
 ## Özellikler
+
 - Kaldığın yerden devam et
 - Reklamsız video oynatma
 - Otomatik sonraki bölüme geçme
@@ -16,8 +22,11 @@
 - Multi-Thread indirme
 
 ## Kurulum
+1. [Son sürümler](https://github.com/CaptainSP/animecix-desktop/releases) sayfasına gidin
+2. `.dmg` uzantılı en güncel dosyayı indirin
+3. İndirilen dosyayı çift tıklayıp açın
+4. Uygulama ikonunu `Applications` klasörüne sürükleyin
 
-[Buradan](https://github.com/CaptainSP/animecix-desktop/releases/download/v1.1.5/AnimeciX-Setup-1.1.5.exe) kurulum dosyasını indirin ve açın. AnimeciX kendi kendini kuracak ve otomatik olarak açılacaktır.
 
 ## Geliştirme
 
@@ -26,12 +35,20 @@ Cihazınızda NodeJS kurulduğundan emin olun.
 ```sh
 git clone https://github.com/CaptainSP/animecix-desktop.git
 ```
+
 İndirdikten veya klonladıktan sonra klasör içerisinde:
 
 ```sh
 npm install
 ```
+
 komutunu çalıştırın.
+
+Daha sonrasında
+animecix-mac/node_modules/@cliqz/adblocker-electron/dist/commonjs/preload_path.js
+Dosyasının içindeki "node:path" yazısını "path" ile değiştirin.
+
+(Ya da direkt MacOS için düzenlediğim repoyu kullanın https://github.com/ErenEksen/electron-adblocker-mac-compatible )
 
 ### Yararlı Komutlar
 
@@ -44,20 +61,17 @@ npm start #Compile kodu ile birlikte Electron uygulamasını başlatır
 ```
 
 ```sh
-npm run build #64 ve 32 bit Windows için kurulum dosyası oluşturur.
-```
-
-```sh
-npm run build32 #Yalnızca 32 bit Windows için kurulum dosyası oluşturur.
+npm run buildMac #Arm64 Mac için kurulum dosyası oluşturur.
 ```
 
 ## İletişim
 
-Herhangi bir sorunuzda benimle iletişim kurmaktan çekinmeyin.
+Resmi bir proje değildir, destek için geliştiricilere yazmayın,
+Ancak herhangi bir sorunuzda benimle iletişim kurmaktan çekinmeyin.
 
-- [discord.gg/animecix](https://discord.com/invite/animecix) 
-- Discord: [CaptainSP#9999](https://discord.com/users/344220078465744896)
-- Mail: [onmuapps@gmail.com](mailto://onmuapps@gmail.com) 
+- [discord.gg/RBPUchD4ze](https://discord.com/invite/RBPUchD4ze)
+- Discord: [axis27](https://discord.com/users/286890811763720202)
+- Mail: [mail@ereneksen.com](mailto://mail@ereneksen.com)
 
 ## License
 

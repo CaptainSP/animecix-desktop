@@ -1,4 +1,4 @@
-import { ElectronBlocker } from "@cliqz/adblocker-electron";
+import { ElectronBlocker } from "@ghostery/adblocker-electron";
 import { session } from "electron";
 import { WindowController } from "./window-controller";
 
@@ -26,9 +26,9 @@ export class RequestController {
 
   private setupAdblock() {
     ElectronBlocker.fromPrebuiltAdsAndTracking(require("node-fetch")).then(
-      (blocker) => {
+      (blocker: ElectronBlocker) => {
         this.blocker = blocker;
-      }
+      },
     );
   }
 
@@ -54,7 +54,7 @@ export class RequestController {
         }
 
         callback({ requestHeaders: details.requestHeaders });
-      }
+      },
     );
   }
 
@@ -77,7 +77,7 @@ export class RequestController {
         } else if (!callBackCalled) {
           callback({});
         }
-      }
+      },
     );
   }
 
@@ -115,7 +115,7 @@ export class RequestController {
           console.error(e);
           callback({});
         }
-      }
+      },
     );
   }
 }

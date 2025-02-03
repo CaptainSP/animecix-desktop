@@ -46,7 +46,7 @@ export class WindowController {
     this.registerDeepLinks();
     this.setOpenHandler();
 
-    this.win?.webContents.openDevTools();
+    //this.win?.webContents.openDevTools();
   }
 
   // Register deep links (animecix://) for the app.
@@ -126,7 +126,7 @@ export class WindowController {
     if (this.win != null) {
       this.win.webContents.on("did-create-window", (window) => {
         window.webContents.setUserAgent(
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0"
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0",
         );
       });
     }

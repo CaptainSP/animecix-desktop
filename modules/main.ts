@@ -6,7 +6,7 @@ import { DownloadController } from "./controllers/download-controller";
 import { SiteMenuController } from "./controllers/site-menu-controller";
 import { PlayerController } from "./controllers/player-controller";
 import { RequestController } from "./controllers/request-controller";
-import { RpcController } from "./controllers/rpc-controller";
+//import { RpcController } from "./controllers/rpc-controller"; TODO
 import { AuthController } from "./controllers/auth-controller";
 import { DeeplinkController } from "./controllers/deeplink-controller";
 
@@ -26,6 +26,8 @@ export class Main {
         const win = new BrowserWindow({
           show: false,
           backgroundColor: "#1D1D1D",
+          width: 1350,
+          height: 800,
           webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -72,15 +74,17 @@ export class Main {
         playerController.execute();
 
         // Discord RPC
+        /*
         const rpcController = new RpcController(this.win);
-        rpcController.execute();
+        rpcController.execute();         TODO
+        */
 
         // Register Auth Controller
         const authController = new AuthController(this.win);
 
         const deeplinkController = new DeeplinkController(
           this.win,
-          authController
+          authController,
         );
         deeplinkController.execute();
 
