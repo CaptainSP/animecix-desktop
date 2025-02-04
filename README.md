@@ -10,7 +10,7 @@ Yok
 
 ### Neler Çalışıyor
 
-- **DiscordRPC**: Entegrasyon devam ediyor (ETA: Belirsiz)
+- **DiscordRPC**: Her şeyiyle harika çalışıyor!
 - **TauVideo Oynatıcı**
 - **Video İndirme**
 - **Kaldığın yerden devam et**
@@ -21,7 +21,7 @@ Yok
 
 ---
 
-[animecix.net](https://animecix.net) web sitesinin masaüstü uygulamasıdır.
+[animecix.net](https://animecix.net) web sitesinin macbook uygulamasıdır.
 
 [Electron](https://www.electronjs.org/) ile oluşturulmuştur. Typescript ile yazılmıştır.
 

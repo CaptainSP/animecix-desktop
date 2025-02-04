@@ -1,10 +1,13 @@
-import { session } from "electron";
+import { session, app } from "electron";
 import { autoUpdater, ProgressInfo, UpdateInfo } from "electron-updater";
 import { WindowController } from "./controllers/window-controller";
 import { NotificationHelper } from "./helpers/notification-helper";
 
 export class Updater {
-  constructor(private win: WindowController) {}
+  constructor(private win: WindowController) {
+    autoUpdater.autoDownload = false;
+    autoUpdater.autoInstallOnAppQuit = true;
+  }
 
   public execute() {
     autoUpdater.checkForUpdates();
@@ -16,14 +19,13 @@ export class Updater {
       } catch (e) {
         console.error("Failed to clear cache", e);
       }
+
       NotificationHelper.createAndShow(
-        "AnimeciX Güncelleniyor...",
-        "Güncelleme indiriliyor"
+        "AnimeciX Güncellemesi Mevcut",
+        "Yeni bir güncelleme var, indirilsin mi?",
       );
 
-      this.win.loadURL(
-        "https://animecix.net/windows-update-page/" + info.version
-      );
+      autoUpdater.downloadUpdate();
     });
 
     autoUpdater.on("update-downloaded", async () => {
@@ -33,9 +35,10 @@ export class Updater {
       } catch (e) {
         console.error("Failed to clear cache", e);
       }
+
       NotificationHelper.createAndShow(
-        "AnimeciX Güncelleniyor...",
-        "Güncelleme Kuruluyor"
+        "AnimeciX Güncelleme Hazır",
+        "Güncelleme kurmak için yeniden başlatın.",
       );
 
       autoUpdater.quitAndInstall();
@@ -43,6 +46,10 @@ export class Updater {
 
     autoUpdater.on("download-progress", (data: ProgressInfo) => {
       this.win.sendToWebContents("update-download-progress", data);
+    });
+
+    autoUpdater.on("error", (error) => {
+      console.error("Update error:", error);
     });
   }
 }

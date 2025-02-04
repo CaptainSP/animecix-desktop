@@ -27,18 +27,26 @@
     "url": "https://github.com/CaptainSP/animecix-desktop.git"
   },
   "build": {
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "ErenEksen",
+        "repo": "animecix-mac"
+      }
+    ],
     "mac": {
       "icon": "files/icon.icns",
       "extendInfo": {
         "CFBundleDisplayName": "Animecix",
-        "CFBundleName": "Animecix"
+        "CFBundleName": "animecix",
+        "CFBundleIdentifier": "animecix"
       }
     }
   },
   "dependencies": {
     "@ghostery/adblocker-electron": "^2.5.0",
     "axios": "^0.21.1",
-    "discord-rpc": "^4.0.1",
+    "@xhayper/discord-rpc": "^1.2.0",
     "electron-deeplink": "^1.0.10",
     "electron-updater": "^6.3.9",
     "node-downloader-helper": "^1.0.18",
@@ -49,7 +57,6 @@
     "streamsaver": "^2.0.5"
   },
   "devDependencies": {
-    "@types/discord-rpc": "^4.0.8",
     "@types/electron": "^1.6.10",
     "@types/node-fetch": "^3.0.3",
     "electron": "^34.0.2",
