@@ -4,11 +4,20 @@ MacOS için Animecix Desktop uygulaması.
 
 ![CleanShot 2025-02-03 at 15 00 22](https://github.com/user-attachments/assets/ada79eb5-390c-44cd-adf9-eba26b7e765f)
 
-
 ### 🚨 Bilinen Sorunlar
+
+Yok
+
+### Neler Çalışıyor
+
 - **DiscordRPC**: Entegrasyon devam ediyor (ETA: Belirsiz)
 - **TauVideo Oynatıcı**
-- **Video İndirme** 
+- **Video İndirme**
+- **Kaldığın yerden devam et**
+- **Reklamsız video oynatma**
+- **Otomatik sonraki bölüme geçme**
+- **Videoları indirme**
+- **Multi-Thread indirme**
 
 ---
 
@@ -18,18 +27,12 @@ MacOS için Animecix Desktop uygulaması.
 
 ## Özellikler
 
-- Kaldığın yerden devam et
-- Reklamsız video oynatma
-- Otomatik sonraki bölüme geçme
-- Videoları indirme
-- Multi-Thread indirme
-
 ## Kurulum
+
 1. [Son sürümler](https://github.com/CaptainSP/animecix-desktop/releases) sayfasına gidin
 2. `.dmg` uzantılı en güncel dosyayı indirin
 3. İndirilen dosyayı çift tıklayıp açın
 4. Uygulama ikonunu `Applications` klasörüne sürükleyin
-
 
 ## Geliştirme
 
