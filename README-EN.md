@@ -1,4 +1,3 @@
-````markdown
 # AnimeciX MacOS
 
 Desktop application for AnimeciX on MacOS.
@@ -44,7 +43,6 @@ Ensure NodeJS is installed on your system.
 ```sh
 git clone https://github.com/CaptainSP/animecix-desktop.git
 ```
-````
 
 After downloading or cloning, navigate to the folder and run:
 
@@ -85,6 +83,3 @@ but feel free to reach out to me with any questions:
 
 GPL
 
-```
-
-```
