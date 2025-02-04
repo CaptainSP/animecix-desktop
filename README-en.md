@@ -50,11 +50,6 @@ After downloading or cloning, navigate to the folder and run:
 npm install
 ```
 
-Then modify the following file:
-`animecix-mac/node_modules/@ghostery/adblocker-electron/dist/commonjs/preload_path.js`
-Change "node:path" to "path" in the file contents.
-
-(Alternatively, use my modified repository: https://github.com/ErenEksen/electron-adblocker-mac-compatible)
 
 ### Useful Commands
 
