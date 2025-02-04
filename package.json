@@ -17,14 +17,14 @@
     "deploy32": "electron-builder build --win --ia32 --publish always"
   },
   "author": {
-    "name": "CaptainSP",
+    "name": "CaptainSP, Eren Eksen (MacOS Port)",
     "email": "onmuapps@gmail.com",
     "url": "https://github.com/CaptainSP"
   },
   "license": "GPL",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CaptainSP/animecix-desktop.git"
+    "url": "https://github.com/ErenEksen/animecix-mac.git"
   },
   "build": {
     "publish": [
