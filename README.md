@@ -10,10 +10,10 @@ MacOS için Animecix Desktop uygulaması.
 
 Yok
 
-### Neler Çalışıyor
+### 💯 Neler Çalışıyor
 
 - **DiscordRPC**: Her şeyiyle harika çalışıyor!
-- **TauVideo Oynatıcı**
+- **Tüm Video Oynatıcılar**
 - **Video İndirme**
 - **Kaldığın yerden devam et**
 - **Reklamsız video oynatma**
