@@ -11,16 +11,16 @@ export class RpcController {
       clientId: "921684324141641728",
     });
 
-    // Attempt to connect
+    //try to connect
     this.client.once("ready", () => {
       this.isConnected = true;
-      console.log(`Logged in as ${this.client.user?.tag}`);
 
-      this.setIdleActivity(); // Set the initial idle activity
+      this.setIdleActivity(); // idle
     });
 
+    //if cannot connect, throw an error
     this.client.login().catch((err) => {
-      console.error("Failed to connect to Discord RPC:", err.message);
+      console.error("Discord RPC bağlanılamadı :", err.message);
       this.isConnected = false;
     });
   }
@@ -38,11 +38,12 @@ export class RpcController {
   public execute(): void {
     ipcMain.on("discord-rpc", (event, data) => {
       if (!this.isConnected) {
-        console.warn("Discord RPC not connected, cannot set activity.");
+        console.warn("Discord RPC çalışmıyor.");
         return;
       }
 
       const watchingActivity = {
+        //When the user watch an anime
         state: data.state === "" ? "Movie" : data.state,
         details: data.details,
         startTimestamp: Date.now(),
@@ -50,15 +51,17 @@ export class RpcController {
         type: 3,
       };
 
-      this.client.user?.setActivity(watchingActivity).catch(console.error);
+      this.client.user?.setActivity(watchingActivity).catch(console.error); //update activity status.
     });
 
     ipcMain.on("discord-rpc-destroy", () => {
+      // When the user  returns to the homepage, the RPC status is set to idle. Didn't test tho
       this.setIdleActivity();
     });
   }
 
   public destroy(): void {
+    //After app close, clears the activity status.
     if (!this.isConnected) return;
     this.client.user?.clearActivity().catch(console.error);
   }
