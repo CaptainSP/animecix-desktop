@@ -6,7 +6,7 @@ import { DownloadController } from "./controllers/download-controller";
 import { SiteMenuController } from "./controllers/site-menu-controller";
 import { PlayerController } from "./controllers/player-controller";
 import { RequestController } from "./controllers/request-controller";
-//import { RpcController } from "./controllers/rpc-controller"; TODO
+import { RpcController } from "./controllers/rpc-controller";
 import { AuthController } from "./controllers/auth-controller";
 import { DeeplinkController } from "./controllers/deeplink-controller";
 
@@ -33,7 +33,7 @@ export class Main {
             contextIsolation: false,
             nodeIntegrationInSubFrames: true,
             preload: this.dir + "/files/preload.js",
-            nativeWindowOpen: true,
+            //nativeWindowOpen: true,
           },
           title: "AnimeciX",
           icon: path.join(this.dir, "files", "icon.png"),
@@ -74,10 +74,8 @@ export class Main {
         playerController.execute();
 
         // Discord RPC
-        /*
         const rpcController = new RpcController(this.win);
-        rpcController.execute();         TODO
-        */
+        rpcController.execute();
 
         // Register Auth Controller
         const authController = new AuthController(this.win);

@@ -38,9 +38,9 @@
   "dependencies": {
     "@ghostery/adblocker-electron": "^2.5.0",
     "axios": "^0.21.1",
-    "discord-rich-presence": "^0.0.8",
+    "discord-rpc": "^4.0.1",
     "electron-deeplink": "^1.0.10",
-    "electron-updater": "^4.3.9",
+    "electron-updater": "^6.3.9",
     "node-downloader-helper": "^1.0.18",
     "node-fetch": "^2.6.1",
     "node-gyp": "^9.0.0",
@@ -49,9 +49,10 @@
     "streamsaver": "^2.0.5"
   },
   "devDependencies": {
+    "@types/discord-rpc": "^4.0.8",
     "@types/electron": "^1.6.10",
     "@types/node-fetch": "^3.0.3",
-    "electron": "^13.1.6",
+    "electron": "^34.0.0",
     "electron-builder": "^23.6.0",
     "patch-package": "^8.0.0",
     "typescript": "^4.5.4"

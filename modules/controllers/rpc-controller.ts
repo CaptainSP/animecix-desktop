@@ -1,29 +1,38 @@
-/* import { ipcMain } from "electron";
+import { ipcMain } from "electron";
+import { Client } from "discord-rpc";
 import { WindowController } from "./window-controller";
 
 export class RpcController {
-  private readonly client = require("discord-rich-presence")(
-    "921684324141641728"
-  );
+  private readonly client: Client;
 
-  constructor(private win: WindowController) {}
+  constructor(private win: WindowController) {
+    this.client = new Client({ transport: "ipc" });
+    this.client.login({ clientId: "921684324141641728" }).catch(console.error);
+  }
 
-  public execute() {
+  public execute(): void {
     ipcMain.on("discord-rpc", (event, data) => {
-      this.client.updatePresence({
-        state: data.state == "" ? "Movie" : data.state,
-        details: data.details,
-        startTimestamp: new Date(),
-        largeImageKey: "animecix-logo",
-      });
+      this.client
+        .setActivity({
+          state: data.state === "" ? "Movie" : data.state,
+          details: data.details,
+          startTimestamp: new Date(),
+          largeImageKey: "animecix-logo",
+        })
+        .catch(console.error);
     });
 
     ipcMain.on("discord-rpc-destroy", (event, data) => {
-      this.client.updatePresence({
-        startTimestamp: new Date(),
-        largeImageKey: "animecix-logo",
-      });
+      this.client
+        .setActivity({
+          startTimestamp: new Date(),
+          largeImageKey: "animecix-logo",
+        })
+        .catch(console.error);
     });
   }
+
+  public destroy(): void {
+    this.client.destroy().catch(console.error);
+  }
 }
-*/
