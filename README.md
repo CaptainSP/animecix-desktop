@@ -2,7 +2,8 @@
 
 MacOS için Animecix Desktop uygulaması.
 
-![CleanShot 2025-02-03 at 15 00 22](https://github.com/user-attachments/assets/ada79eb5-390c-44cd-adf9-eba26b7e765f)
+![CleanShot 2025-02-05 at 02 03 59](https://github.com/user-attachments/assets/fbe54e29-a167-4c8f-ab6f-2792424fdfc5)
+
 
 ### 🚨 Bilinen Sorunlar
 
