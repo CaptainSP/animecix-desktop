@@ -2,7 +2,7 @@
 
 MacOS için Animecix Desktop uygulaması.
 
-![CleanShot 2025-02-05 at 02 03 59](https://github.com/user-attachments/assets/fbe54e29-a167-4c8f-ab6f-2792424fdfc5)
+![animecix-mac1](https://github.com/user-attachments/assets/bb484881-4e19-4183-a67e-0eb46e1f6a35)
 
 
 ### 🚨 Bilinen Sorunlar
@@ -19,6 +19,8 @@ Yok
 - **Otomatik sonraki bölüme geçme**
 - **Videoları indirme**
 - **Multi-Thread indirme**
+
+![CleanShot 2025-02-05 at 02 12 46](https://github.com/user-attachments/assets/a8a246a9-7420-4128-b460-163e6a2e5eb0)
 
 ---
 
