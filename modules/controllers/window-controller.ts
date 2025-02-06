@@ -28,7 +28,7 @@ export class WindowController {
 
   // Set the progress bar to the given percentage. It will be shown in task bar
   public setProgress(progress: number) {
-    this.win?.setProgressBar(progress);
+    this.win?.setProgressBar(progress != 0 ? progress : -1);
   }
 
   unmaximize() {
