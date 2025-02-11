@@ -48,7 +48,7 @@ export class Main {
         win.on("ready-to-show", () => {
           win.maximize();
           win.show();
-          win.setProgressBar(0);
+          win.setProgressBar(-1);
         });
 
         //win.webContents.openDevTools()
