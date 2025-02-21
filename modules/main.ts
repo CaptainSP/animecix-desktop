@@ -52,6 +52,7 @@ export class Main {
         });
 
         //win.webContents.openDevTools()
+        
 
         // Check for updates
         const updater = new Updater(this.win);
@@ -183,7 +184,7 @@ export class Main {
           {
             label: "İletişim",
             click: async () => {
-              await shell.openExternal("https://animecix.net/contact");
+              await shell.openExternal("https://anm.cx/contact");
             },
           },
         ],

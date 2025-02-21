@@ -1,14 +1,4 @@
-import {
-  BrowserWindow,
-  ipcMain,
-  WebContents,
-  app,
-  dialog,
-  session,
-  shell,
-} from "electron";
-import path from "path";
-import { Deeplink } from "electron-deeplink";
+import { BrowserWindow, ipcMain, WebContents, shell, session } from "electron";
 
 export class WindowController {
   private isOdnok = false;
@@ -46,6 +36,12 @@ export class WindowController {
     this.registerDeepLinks();
     this.setOpenHandler();
 
+    try {
+      session.defaultSession.clearCache();
+      this.win?.webContents?.session.clearCache();
+    } catch (e) {
+      console.error("Failed to clear cache", e);
+    }
     //this.win?.webContents.openDevTools();
   }
 

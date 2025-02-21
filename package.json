@@ -1,6 +1,6 @@
 {
   "name": "animecix",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "AnimeciX Desktop App",
   "main": "main.js",
   "scripts": {
@@ -30,7 +30,6 @@
     "@cliqz/adblocker-electron": "^1.22.2",
     "axios": "^0.21.1",
     "discord-rich-presence": "^0.0.8",
-    "electron-deeplink": "^1.0.10",
     "electron-updater": "^6.3.9",
     "node-downloader-helper": "^1.0.18",
     "node-fetch": "^2.6.1",
@@ -43,7 +42,7 @@
     "@types/electron": "^1.6.10",
     "@types/node-fetch": "^3.0.3",
     "electron": "^34.0.0",
-    "electron-builder": "^23.6.0",
+    "electron-builder": "^25.1.8",
     "typescript": "^4.5.4"
   }
 }
