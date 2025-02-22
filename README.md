@@ -16,8 +16,32 @@
 - Multi-Thread indirme
 
 ## Kurulum
+1. AppImage Dosyasını İndirme
 
-[Buradan](https://github.com/CaptainSP/animecix-desktop/releases/download/v1.1.5/AnimeciX-Setup-1.1.5.exe) kurulum dosyasını indirin ve açın. AnimeciX kendi kendini kuracak ve otomatik olarak açılacaktır.
+İlk olarak, uygulamanın doğru AppImage sürümünü indirdiğinizden emin olun. İşletim sisteminizin mimarisine uygun olanı seçtiğinizden emin olun.
+
+2. Çalıştırma İzni Verme (Uygulama Özelliklerinden)
+
+AppImage dosyasını indirdikten sonra, dosyayı çalıştırabilmek için bazı izinler vermeniz gerekebilir. Bunun için şu adımları takip edin:
+
+İndirilen AppImage dosyasına sağ tıklayın.
+Açılan menüde "Özellikler" (Properties) seçeneğine tıklayın.
+"İzinler" (Permissions) sekmesine gidin.
+Burada, "Bu dosyayı çalıştırılabilir hale getir" (Allow executing file as program) seçeneğinin işaretli olduğundan emin olun.
+Bu, AppImage dosyasının çalıştırılabilir hale gelmesini sağlar.
+Değişiklikleri kaydedin ve pencereden çıkın.
+
+Alternatif olarak, terminal üzerinden de şu komutu kullanabilirsiniz:
+
+chmod +x /path/to/your/file.AppImage
+
+Bu komut, dosyaya çalıştırma izni verir.
+
+3. Uygulamayı Açma
+
+Artık AppImage dosyasına çalıştırma izni verdiğinize göre, uygulamayı açabilirsiniz. Bunu yapmak için:
+
+-Dosyaya çift tıklayın.
 
 ## Geliştirme
 
