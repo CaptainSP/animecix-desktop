@@ -28,8 +28,9 @@
   },
   "dependencies": {
     "@cliqz/adblocker-electron": "^1.22.2",
+    "@xhayper/discord-rpc": "^1.2.0",
     "axios": "^0.21.1",
-    "discord-rich-presence": "^0.0.8",
+    "electron-deeplink": "^1.0.10",
     "electron-updater": "^6.3.9",
     "node-downloader-helper": "^1.0.18",
     "node-fetch": "^2.6.1",
