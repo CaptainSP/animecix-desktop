@@ -22,7 +22,7 @@ export class Updater {
       );
 
       this.win.loadURL(
-        "https://anm.cx/windows-update-page/" + info.version
+        "https://animecix.tv/windows-update-page/" + info.version
       );
     });
 
